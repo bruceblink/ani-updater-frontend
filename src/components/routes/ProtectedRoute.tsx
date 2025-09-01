@@ -11,7 +11,7 @@ export function ProtectedRoute({ children }: Props) {
   const location = useLocation();
 
   useEffect(() => {
-    fetch('http://localhost:8000/me', { credentials: 'include' })
+    fetch('http://localhost:8000/api/me', { credentials: 'include' })
       .then(res => setIsLoggedIn(res.ok))
       .catch(() => setIsLoggedIn(false));
   }, []);

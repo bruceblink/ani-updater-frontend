@@ -121,15 +121,21 @@ export function SignInView() {
           justifyContent: 'center',
         }}
       >
-        <IconButton color="inherit">
+{/*        <IconButton color="inherit">
           <Iconify width={22} icon="socials:google" />
-        </IconButton>
-        <IconButton color="inherit">
+        </IconButton>*/}
+        <IconButton
+          color="inherit"
+          onClick={() => {
+            // 重定向到后端 GitHub 登录接口
+            window.location.href = "http://localhost:8000/auth/github/login";
+          }}
+        >
           <Iconify width={22} icon="socials:github" />
         </IconButton>
-        <IconButton color="inherit">
+{/*        <IconButton color="inherit">
           <Iconify width={22} icon="socials:twitter" />
-        </IconButton>
+        </IconButton>*/}
       </Box>
     </>
   );
