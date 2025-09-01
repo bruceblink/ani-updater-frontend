@@ -1,6 +1,6 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -49,6 +49,26 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
     },
     [handleClosePopover, router]
   );
+
+  // 🔹 新增 logout 事件
+  const handleLogout = useCallback(async () => {
+    handleClosePopover();
+
+    try {
+      await fetch('http://localhost:8000/logout', {
+        method: 'POST',
+        credentials: 'include', // 发送 HttpOnly cookie
+      });
+    } catch (err) {
+      console.error('Logout failed', err);
+    }
+
+    // 清理前端本地状态（如果有）
+    localStorage.removeItem('user');
+
+    // 跳转登录页
+    router.push('/sign-in');
+  }, [handleClosePopover, router]);
 
   return (
     <>
@@ -129,7 +149,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth color="error" size="medium" variant="text">
+          <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogout}>
             Logout
           </Button>
         </Box>

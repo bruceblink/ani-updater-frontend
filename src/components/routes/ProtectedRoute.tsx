@@ -11,9 +11,19 @@ export function ProtectedRoute({ children }: Props) {
   const location = useLocation();
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/me', { credentials: 'include' })
-      .then(res => setIsLoggedIn(res.ok))
-      .catch(() => setIsLoggedIn(false));
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/me', {
+          credentials: 'include', // 发送 HttpOnly cookie
+        });
+        setIsLoggedIn(res.ok);
+      } catch (err) {
+        console.error('Auth check failed', err);
+        setIsLoggedIn(false);
+      }
+    };
+
+    void checkAuth();
   }, []);
 
   if (isLoggedIn === null) return <div>加载中...</div>;
