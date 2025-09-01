@@ -15,7 +15,7 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { _myAccount } from 'src/_mock';
-
+import { CONFIG } from 'src/config-global';
 // ----------------------------------------------------------------------
 
 export type AccountPopoverProps = IconButtonProps & {
@@ -53,9 +53,8 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
   // 🔹 新增 logout 事件
   const handleLogout = useCallback(async () => {
     handleClosePopover();
-    const BASIC_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     try {
-      await fetch(`${BASIC_API_URL}/logout`, {
+      await fetch(`${CONFIG.apiUrl}/logout`, {
         method: 'POST',
         credentials: 'include', // 发送 HttpOnly cookie
       });

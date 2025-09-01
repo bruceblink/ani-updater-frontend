@@ -2,11 +2,11 @@ import { type ReactNode} from 'react';
 import { useState, useEffect} from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
+import { CONFIG } from 'src/config-global';
+
 interface Props {
   children: ReactNode;
 }
-
-const BASIC_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export function ProtectedRoute({ children }: Props) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -16,7 +16,7 @@ export function ProtectedRoute({ children }: Props) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${BASIC_API_URL}/api/me`, {
+        const res = await fetch(`${CONFIG.apiUrl}/api/me`, {
           credentials: 'include', // 发送 HttpOnly cookie
         });
         setIsLoggedIn(res.ok);
