@@ -2,6 +2,9 @@ import { type ReactNode} from 'react';
 import { useState, useEffect} from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
+import Box from '@mui/material/Box';
+import { CircularProgress } from '@mui/material';
+
 import { CONFIG } from 'src/config-global';
 
 interface Props {
@@ -29,7 +32,20 @@ export function ProtectedRoute({ children }: Props) {
     void checkAuth();
   }, []);
 
-  if (isLoggedIn === null) return <div>加载中...</div>;
+  if (isLoggedIn === null) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh', // 居中占满全屏
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!isLoggedIn) {
     // 未登录，跳转到登录页，同时记录来源页面
