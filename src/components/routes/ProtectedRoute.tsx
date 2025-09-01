@@ -6,14 +6,17 @@ interface Props {
   children: ReactNode;
 }
 
+const BASIC_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export function ProtectedRoute({ children }: Props) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const location = useLocation();
 
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/me', {
+        const res = await fetch(`${BASIC_API_URL}/api/me`, {
           credentials: 'include', // 发送 HttpOnly cookie
         });
         setIsLoggedIn(res.ok);

@@ -18,6 +18,8 @@ import { Iconify } from 'src/components/iconify';
 export function SignInView() {
   const router = useRouter();
 
+  const BASIC_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignIn = useCallback(() => {
@@ -128,7 +130,7 @@ export function SignInView() {
           color="inherit"
           onClick={() => {
             // 重定向到后端 GitHub 登录接口
-            window.location.href = "http://localhost:8000/auth/github/login";
+            window.location.href = `${BASIC_API_URL}/auth/github/login`;
           }}
         >
           <Iconify width={22} icon="socials:github" />

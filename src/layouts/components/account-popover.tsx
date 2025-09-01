@@ -53,9 +53,9 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
   // 🔹 新增 logout 事件
   const handleLogout = useCallback(async () => {
     handleClosePopover();
-
+    const BASIC_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     try {
-      await fetch('http://localhost:8000/logout', {
+      await fetch(`${BASIC_API_URL}/logout`, {
         method: 'POST',
         credentials: 'include', // 发送 HttpOnly cookie
       });
