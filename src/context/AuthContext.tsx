@@ -22,11 +22,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    const signal = controller.signal;
 
     const checkAuth = async () => {
       try {
-        const res = await api.get("/api/me", { signal });
+        const res = await api.get("/api/me", { signal: controller.signal });
         setStatus("authenticated");
 
         // 如果后端返回 access_token_exp，则预刷新
@@ -36,8 +35,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (err: any) {
         if (axios.isCancel(err)) return;
 
-        // 无论是否刷新失败，401 都可以视作未登录
-        setStatus("unauthenticated");
+        // ✅ 只在明确 401 时判定未登录
+        if (err.response?.status === 401) {
+          setStatus("unauthenticated");
+        } else {
+          // 其他错误（如 500 / 网络失败）保持 loading，不会无限跳转
+          console.error("Auth check failed:", err);
+          setStatus("loading");
+        }
       }
     };
 

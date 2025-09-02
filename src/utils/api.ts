@@ -9,27 +9,17 @@ const api = axios.create({
   withCredentials: true, // 发送 HttpOnly cookie
 });
 
-let isRefreshing = false;
-let refreshSubscribers: (() => void)[] = [];
 let loadingCount = 0;
 
 // 可选：全局 loading 状态
 export const setGlobalLoading = (loading: boolean) => {
-  // 这里可以触发全局 store 或 context 状态
   console.log("全局 loading:", loading);
 };
 
 // 可选：全局错误处理
 export const showGlobalError = (msg: string) => {
-  // 这里可以触发 toast / message
   console.error("全局错误:", msg);
 };
-
-// 通知等待的请求刷新完成
-function onRefreshed() {
-  refreshSubscribers.forEach(cb => cb());
-  refreshSubscribers = [];
-}
 
 // 请求拦截器
 api.interceptors.request.use(config => {
@@ -45,36 +35,9 @@ api.interceptors.response.use(
     if (loadingCount <= 0) setGlobalLoading(false);
     return res;
   },
-  async error => {
+  error => {
     loadingCount--;
     if (loadingCount <= 0) setGlobalLoading(false);
-
-    const originalRequest = error.config as any;
-
-    // access_token 过期处理
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      if (!isRefreshing) {
-        isRefreshing = true;
-        try {
-          await api.post("/auth/refresh"); // 刷新 token
-          isRefreshing = false;
-          onRefreshed();
-        } catch {
-          isRefreshing = false;
-          onRefreshed();
-          window.location.href = "/sign-in";
-          return Promise.reject(error);
-        }
-      }
-
-      return new Promise((resolve, _reject) => {
-        refreshSubscribers.push(() => {
-          resolve(api(originalRequest));
-        });
-      });
-    }
 
     showGlobalError(error.message || "请求失败");
     return Promise.reject(error);
