@@ -4,7 +4,7 @@
 
 ![preview](public/assets/images/minimal-free-preview.png)
 
-> Free React Admin Dashboard made with Material-UI components and React + Vite.js.
+> Free React Admin Dashboard made with Material-UI components and React + Vite.js base on [minimal.free](https://github.com/minimal-ui-kit/minimal.free).
 
 ## Pages
 
@@ -27,5 +27,5 @@
 
 ## License
 
-Distributed under the [MIT](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) license.
+Distributed under the [MIT](LICENSE.md) license.
 
