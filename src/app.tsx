@@ -10,6 +10,8 @@ import { ThemeProvider } from 'src/theme/theme-provider';
 
 import { Iconify } from 'src/components/iconify';
 
+import { AuthProvider } from './context/AuthContext';
+
 // ----------------------------------------------------------------------
 
 type AppProps = {
@@ -39,10 +41,12 @@ export default function App({ children }: AppProps) {
   );
 
   return (
-    <ThemeProvider>
-      {children}
-      {githubButton()}
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        {children}
+        {githubButton()}
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
