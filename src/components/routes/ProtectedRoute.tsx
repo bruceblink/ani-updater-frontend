@@ -1,54 +1,28 @@
-import { type ReactNode} from 'react';
-import { useState, useEffect} from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { type ReactNode } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
-import Box from '@mui/material/Box';
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from "@mui/material";
 
-import { CONFIG } from 'src/config-global';
+import { useAuth } from 'src/context/AuthContext';
+
 
 interface Props {
   children: ReactNode;
 }
 
 export function ProtectedRoute({ children }: Props) {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const { status } = useAuth();
   const location = useLocation();
 
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch(`${CONFIG.apiUrl}/api/me`, {
-          credentials: 'include', // 发送 HttpOnly cookie
-        });
-        setIsLoggedIn(res.ok);
-      } catch (err) {
-        console.error('Auth check failed', err);
-        setIsLoggedIn(false);
-      }
-    };
-
-    void checkAuth();
-  }, []);
-
-  if (isLoggedIn === null) {
+  if (status === "loading") {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh', // 居中占满全屏
-        }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <CircularProgress />
       </Box>
     );
   }
 
-  if (!isLoggedIn) {
-    // 未登录，跳转到登录页，同时记录来源页面
+  if (status === "unauthenticated") {
     return <Navigate to="/sign-in" state={{ from: location }} replace />;
   }
 
