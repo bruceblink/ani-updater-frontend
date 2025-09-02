@@ -28,9 +28,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const res = await api.get("/api/me", { signal: controller.signal });
         setStatus("authenticated");
 
-        // 如果后端返回 access_token_exp，则预刷新
-        if (res.data?.access_token_exp) {
-          schedulePreRefresh(res.data.access_token_exp);
+        // 如果后端返回 access_token得过期时间exp，则预刷新
+        if (res.data?.exp) {
+          schedulePreRefresh(res.data.exp);
         }
       } catch (err: any) {
         if (axios.isCancel(err)) return;
