@@ -49,7 +49,7 @@ api.interceptors.response.use(
     loadingCount--;
     if (loadingCount <= 0) setGlobalLoading(false);
 
-    const originalRequest = error.config;
+    const originalRequest = error.config as any;
 
     // access_token 过期处理
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -62,20 +62,16 @@ api.interceptors.response.use(
           isRefreshing = false;
           onRefreshed();
         } catch {
-          // 刷新失败，标记
-          error._refreshFailed = true;
           isRefreshing = false;
           onRefreshed();
+          window.location.href = "/sign-in";
+          return Promise.reject(error);
         }
       }
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, _reject) => {
         refreshSubscribers.push(() => {
-          if (error._refreshFailed) {
-            reject(error);
-          } else {
-            resolve(api(originalRequest));
-          }
+          resolve(api(originalRequest));
         });
       });
     }
