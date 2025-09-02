@@ -1,12 +1,12 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from "src/config-global";
 
 // 创建 Axios 实例
 const api = axios.create({
-  baseURL: `${CONFIG.apiUrl}`,
-  withCredentials: true, // 发送 HttpOnly Cookie
+  baseURL: CONFIG.apiUrl,
+  withCredentials: true, // 发送 HttpOnly cookie
 });
 
 let isRefreshing = false;
@@ -58,20 +58,24 @@ api.interceptors.response.use(
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          await api.post("/auth/refresh"); // 刷新 access_token
+          await api.post("/auth/refresh"); // 刷新 token
           isRefreshing = false;
           onRefreshed();
         } catch {
-          showGlobalError("登录状态过期，请重新登录");
-          window.location.href = "/login";
-          return Promise.reject(error);
+          // 刷新失败，标记
+          error._refreshFailed = true;
+          isRefreshing = false;
+          onRefreshed();
         }
       }
 
-      // 等待刷新完成，再重试当前请求
-      return new Promise(resolve => {
-        refreshSubscribers.push(async () => {
-          resolve(api(originalRequest));
+      return new Promise((resolve, reject) => {
+        refreshSubscribers.push(() => {
+          if (error._refreshFailed) {
+            reject(error);
+          } else {
+            resolve(api(originalRequest));
+          }
         });
       });
     }
@@ -81,17 +85,15 @@ api.interceptors.response.use(
   }
 );
 
-// ---------- 可选：预刷新逻辑 ----------
+// 预刷新 token
 export function schedulePreRefresh(exp: number) {
-  // exp: access_token 的到期时间（Unix秒）
   const now = dayjs().unix();
   const delay = (exp - now - 60) * 1000; // 提前 60 秒刷新
-
   if (delay > 0) {
     setTimeout(() => {
       api.post("/auth/refresh").catch(() => {
         showGlobalError("登录状态过期，请重新登录");
-        window.location.href = "/login";
+        window.location.href = "/sign-in";
       });
     }, delay);
   }
