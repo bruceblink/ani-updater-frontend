@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect, useContext, createContext, type ReactNode } from "react";
 
 import api, { schedulePreRefresh } from "src/utils/api";
@@ -11,7 +12,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   status: "loading",
-  setStatus: () => {}
+  setStatus: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -20,13 +21,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [status, setStatus] = useState<AuthStatus>("loading");
 
   useEffect(() => {
-    let mounted = true;
+    const controller = new AbortController();
+    const signal = controller.signal;
 
     const checkAuth = async () => {
       try {
-        const res = await api.get("/api/me");
-        if (!mounted) return;
-
+        const res = await api.get("/api/me", { signal });
         setStatus("authenticated");
 
         // 如果后端返回 access_token_exp，则预刷新
@@ -34,8 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           schedulePreRefresh(res.data.access_token_exp);
         }
       } catch (err: any) {
-        console.log("auth err: ",err)
-        if (!mounted) return;
+        if (axios.isCancel(err)) return;
 
         // 无论是否刷新失败，401 都可以视作未登录
         setStatus("unauthenticated");
@@ -43,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     void checkAuth();
-    return () => { mounted = false };
+    return () => controller.abort();
   }, []);
 
   return (
