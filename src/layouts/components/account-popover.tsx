@@ -14,8 +14,9 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { useRouter, usePathname } from 'src/routes/hooks';
 
+import api from 'src/utils/api';
+
 import { _myAccount } from 'src/_mock';
-import { CONFIG } from 'src/config-global';
 // ----------------------------------------------------------------------
 
 export type AccountPopoverProps = IconButtonProps & {
@@ -54,10 +55,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
   const handleLogout = useCallback(async () => {
     handleClosePopover();
     try {
-      await fetch(`${CONFIG.apiUrl}/logout`, {
-        method: 'POST',
-        credentials: 'include', // 发送 HttpOnly cookie
-      });
+        await api.post("/logout")
     } catch (err) {
       console.error('Logout failed', err);
     }
