@@ -34,14 +34,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           schedulePreRefresh(res.data.access_token_exp);
         }
       } catch (err: any) {
+        console.log("auth err: ",err)
         if (!mounted) return;
 
-        // 只有刷新失败才置为 unauthenticated
-        if (err._refreshFailed) {
-          setStatus("unauthenticated");
-        } else {
-          setStatus("loading"); // 等待拦截器刷新重试
-        }
+        // 无论是否刷新失败，401 都可以视作未登录
+        setStatus("unauthenticated");
       }
     };
 
