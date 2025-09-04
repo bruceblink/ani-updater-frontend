@@ -22,13 +22,11 @@ export function fNumber(inputValue: InputNumberValue, options?: Options) {
   const number = processInput(inputValue);
   if (number === null) return '';
 
-  const fm = new Intl.NumberFormat(locale.code, {
+  return new Intl.NumberFormat(locale.code, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
     ...options,
   }).format(number);
-
-  return fm;
 }
 
 // ----------------------------------------------------------------------
@@ -39,15 +37,13 @@ export function fCurrency(inputValue: InputNumberValue, options?: Options) {
   const number = processInput(inputValue);
   if (number === null) return '';
 
-  const fm = new Intl.NumberFormat(locale.code, {
+  return new Intl.NumberFormat(locale.code, {
     style: 'currency',
     currency: locale.currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
     ...options,
   }).format(number);
-
-  return fm;
 }
 
 // ----------------------------------------------------------------------
@@ -58,14 +54,12 @@ export function fPercent(inputValue: InputNumberValue, options?: Options) {
   const number = processInput(inputValue);
   if (number === null) return '';
 
-  const fm = new Intl.NumberFormat(locale.code, {
+  return new Intl.NumberFormat(locale.code, {
     style: 'percent',
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
     ...options,
   }).format(number / 100);
-
-  return fm;
 }
 
 // ----------------------------------------------------------------------
