@@ -1,4 +1,4 @@
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 import axios from "axios";
 import dayjs from "dayjs";
@@ -21,60 +21,41 @@ const api = axios.create({
 
 let isRefreshing = false;
 let refreshSubscribers: Array<() => void> = [];
-let loadingCount = 0;
 let preRefreshTimer: ReturnType<typeof setTimeout> | null = null;
 
-// 外部可注册“登录失效”回调（例如把状态置为 unauthenticated）
 let onAuthInvalid: (() => void) | null = null;
 export function setOnAuthInvalid(handler: (() => void) | null) {
   onAuthInvalid = handler;
 }
 
 // —— 可选：全局 loading / 错误 —— //
-const setGlobalLoading = (show: boolean) => console.log("global loading:", show);
 const showGlobalError = (msg: string) => console.error(msg);
 
 // 请求拦截器
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  if (!config.skipAuthRefresh) {
-    loadingCount++;
-    setGlobalLoading(true);
-  }
-
   const token = localStorage.getItem("access_token");
-  if (token) {
-    config.headers.set("Authorization", `Bearer ${token}`);
-  }
-
+  if (token) config.headers["Authorization"] = `Bearer ${token}`;
   return config;
 });
 
 // 响应拦截器
 api.interceptors.response.use(
-  (res) => {
-    if (!res.config.skipAuthRefresh) {
-      loadingCount--;
-      if (loadingCount <= 0) setGlobalLoading(false);
-    }
-    return res;
-  },
+  res => res,
   async (error: AxiosError & { config?: InternalAxiosRequestConfig }) => {
     const originalRequest = error.config;
-    if (!originalRequest) {
-      return Promise.reject(error);
-    }
+    if (!originalRequest) return Promise.reject(error);
 
-    if (!originalRequest?.skipAuthRefresh) {
-      loadingCount--;
-      if (loadingCount <= 0) setGlobalLoading(false);
-    }
-
-    if (originalRequest?.url?.includes("/auth/refresh")) {
+    // /auth/refresh 或 /api/me 失败直接登出
+    if (
+      error.response?.status === 401 &&
+      (originalRequest.url?.includes("/auth/refresh") || originalRequest.url?.includes("/api/me"))
+    ) {
       onAuthInvalid?.();
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest?._retry) {
+    // 对其他 401 请求触发刷新
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       if (!isRefreshing) {
@@ -84,23 +65,20 @@ api.interceptors.response.use(
           const newToken = resp.data.access_token;
           localStorage.setItem("access_token", newToken);
           isRefreshing = false;
-          onRefreshed();
-
-          const nextExp = await extractNextExp(resp);
-          if (nextExp) await schedulePreRefresh(nextExp);
+          refreshSubscribers.forEach(cb => cb());
+          refreshSubscribers = [];
         } catch (e) {
           isRefreshing = false;
-          onRefreshed();
+          refreshSubscribers.forEach(cb => cb());
+          refreshSubscribers = [];
           onAuthInvalid?.();
           return Promise.reject(e);
         }
       }
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         refreshSubscribers.push(() => {
-          if (originalRequest.headers) {
-            originalRequest.headers.set("Authorization", `Bearer ${localStorage.getItem("access_token")}`);
-          }
+          originalRequest.headers["Authorization"] = `Bearer ${localStorage.getItem("access_token")}`;
           resolve(api(originalRequest));
         });
       });
@@ -111,27 +89,7 @@ api.interceptors.response.use(
   }
 );
 
-function onRefreshed() {
-  refreshSubscribers.forEach(cb => cb());
-  refreshSubscribers = [];
-}
-
-async function extractNextExp(resp?: any): Promise<number | undefined> {
-  let exp: number | undefined =
-    resp?.data?.exp ??
-    (resp?.headers?.["x-access-exp"] ? Number(resp.headers["x-access-exp"]) : undefined);
-
-  if (!exp) {
-    try {
-      const me = await api.get("/api/me", { skipAuthRefresh: true });
-      exp = me.data?.exp;
-    } catch {
-      console.warn("no exp param")
-    }
-  }
-  return exp;
-}
-
+// 预刷新 token
 export async function schedulePreRefresh(exp: number) {
   if (preRefreshTimer) clearTimeout(preRefreshTimer);
 
@@ -142,7 +100,7 @@ export async function schedulePreRefresh(exp: number) {
   preRefreshTimer = setTimeout(async () => {
     try {
       const resp = await api.post("/auth/refresh", null, { skipAuthRefresh: true });
-      const nextExp = await extractNextExp(resp);
+      const nextExp = resp.data?.exp;
       if (nextExp) await schedulePreRefresh(nextExp);
     } catch (e) {
       console.log("refresh token error:", e);
