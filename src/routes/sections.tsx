@@ -9,6 +9,7 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import OAuthCallbackHandler from 'src/pages/oauth-callback';
 
 import { ProtectedRoute } from 'src/components/routes/ProtectedRoute';
 
@@ -66,6 +67,10 @@ export const routesSection: RouteObject[] = [
         <SignInPage />
       </AuthLayout>
     ),
+  },
+  {
+    path: 'auth/callback',   // ✅ GitHub OAuth 登录回调
+    element: <OAuthCallbackHandler />,
   },
   {
     path: '404',
