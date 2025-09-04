@@ -59,9 +59,9 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
     } catch (err) {
       console.error('Logout failed', err);
     }
-
     // 清理前端本地状态（如果有）
-    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
 
     // 跳转登录页
     router.push('/sign-in');
