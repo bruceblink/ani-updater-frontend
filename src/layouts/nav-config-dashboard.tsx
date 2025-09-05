@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Label } from 'src/components/label';
 import { SvgColor } from 'src/components/svg-color';
 
@@ -24,8 +26,8 @@ export const navData = [
     icon: icon('ic-user'),
   },*/
   {
-    title: 'Product',
-    path: '/products',
+    title: 'Anime',
+    path: '/animes',
     icon: icon('ic-cart'),
     info: (
       <Label color="error" variant="inverted">
