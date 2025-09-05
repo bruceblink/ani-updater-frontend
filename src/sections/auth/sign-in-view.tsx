@@ -38,7 +38,7 @@ export function SignInView() {
         fullWidth
         name="email"
         label="Email address"
-        defaultValue="hello@gmail.com"
+        defaultValue=""
         sx={{ mb: 3 }}
         slotProps={{
           inputLabel: { shrink: true },
@@ -53,7 +53,7 @@ export function SignInView() {
         fullWidth
         name="password"
         label="Password"
-        defaultValue="@demo1234"
+        defaultValue=""
         type={showPassword ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
