@@ -6,7 +6,7 @@
 
 ## Quick start
 
-- Clone the repo: `git clone https://github.com/bruceblink/material-kit-react.git`
+- Clone the repo: `git clone https://github.com/bruceblink/ani-updater-frontend.git`
 - Recommended: `Node.js v20.x`
 - `cp .env.example .env` and set your environment variables
 - **Install:** `npm i` or `yarn install`
