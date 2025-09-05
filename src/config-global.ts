@@ -15,7 +15,7 @@ function getEnvVar(key: string, fallback: string): string {
 }
 
 export const CONFIG: ConfigValue = {
-  appName: 'Minimal UI',
+  appName: 'Ani Updater',
   appVersion: packageJson.version,
   apiUrl: getEnvVar("VITE_API_URL", "http://localhost:8000"),
 };
