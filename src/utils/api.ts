@@ -100,7 +100,7 @@ export async function schedulePreRefresh(exp: number) {
   preRefreshTimer = setTimeout(async () => {
     try {
       const resp = await api.post("/auth/refresh", null, { skipAuthRefresh: true });
-      const nextExp = resp.data?.exp;
+      const nextExp = resp.data?.data?.access_token_exp;
       if (nextExp) await schedulePreRefresh(nextExp);
     } catch (e) {
       console.log("refresh token error:", e);

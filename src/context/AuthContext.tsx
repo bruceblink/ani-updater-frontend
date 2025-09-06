@@ -29,11 +29,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const checkAuth = async () => {
       try {
         const res = await api.get("/api/me", { signal: controller.signal });
-        setStatus("authenticated");
-
+        if (res.data?.status === "ok"){
+            setStatus("authenticated");
+        }
         // 如果后端返回 access_token 的过期时间 exp，则安排预刷新
-        if (res.data?.exp) {
-          await schedulePreRefresh(res.data.exp);
+        const exp = res.data?.data?.exp;
+        if (exp) {
+          await schedulePreRefresh(exp);
         }
       } catch (err: any) {
         if (axios.isCancel(err)) return;
