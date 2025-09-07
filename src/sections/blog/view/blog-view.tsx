@@ -1,25 +1,22 @@
+import type { Ani } from 'src/hooks/useAniData';
+
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
-
 import { PostItem } from '../post-item';
 import { PostSort } from '../post-sort';
 import { PostSearch } from '../post-search';
 
-import type { IPostItem } from '../post-item';
-
 // ----------------------------------------------------------------------
 
 type Props = {
-  posts: IPostItem[];
+  posts: Ani[];
 };
 
 export function BlogView({ posts }: Props) {
@@ -39,15 +36,8 @@ export function BlogView({ posts }: Props) {
         }}
       >
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Blog
+          Ani
         </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New post
-        </Button>
       </Box>
 
       <Box

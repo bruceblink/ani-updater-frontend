@@ -1,4 +1,5 @@
-import { _posts } from 'src/_mock';
+import useAniData from 'src/hooks/useAniData';
+
 import { CONFIG } from 'src/config-global';
 
 import { BlogView } from 'src/sections/blog/view';
@@ -6,11 +7,13 @@ import { BlogView } from 'src/sections/blog/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
+
+  const { data } = useAniData();
+
   return (
     <>
-      <title>{`Blog - ${CONFIG.appName}`}</title>
-
-      <BlogView posts={_posts} />
+      <title>{`Anis - ${CONFIG.appName}`}</title>
+      <BlogView posts={data} />
     </>
   );
 }

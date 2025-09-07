@@ -1,3 +1,4 @@
+import type { Ani } from 'src/hooks/useAniData';
 import type { CardProps } from '@mui/material/Card';
 import type { IconifyName } from 'src/components/iconify';
 
@@ -9,30 +10,12 @@ import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
-import { fDate } from 'src/utils/format-time';
 import { fShortenNumber } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
-
-export type IPostItem = {
-  id: string;
-  title: string;
-  coverUrl: string;
-  totalViews: number;
-  description: string;
-  totalShares: number;
-  totalComments: number;
-  totalFavorites: number;
-  postedAt: string | number | null;
-  author: {
-    name: string;
-    avatarUrl: string;
-  };
-};
-
 export function PostItem({
   sx,
   post,
@@ -40,14 +23,14 @@ export function PostItem({
   latestPostLarge,
   ...other
 }: CardProps & {
-  post: IPostItem;
+  post: Ani;
   latestPost: boolean;
   latestPostLarge: boolean;
 }) {
   const renderAvatar = (
     <Avatar
-      alt={post.author.name}
-      src={post.author.avatarUrl}
+      alt={post.title}
+      src={post.detail_url}
       sx={{
         left: 24,
         zIndex: 9,
@@ -93,9 +76,9 @@ export function PostItem({
       }}
     >
       {[
-        { number: post.totalComments, icon: 'solar:chat-round-dots-bold' },
-        { number: post.totalViews, icon: 'solar:eye-bold' },
-        { number: post.totalShares, icon: 'solar:share-bold' },
+        { number: post.update_count, icon: 'solar:chat-round-dots-bold' },
+        { number: post.update_count, icon: 'solar:eye-bold' },
+        { number: post.update_count, icon: 'solar:share-bold' },
       ].map((info, _index) => (
         <Box
           key={_index}
@@ -118,7 +101,7 @@ export function PostItem({
     <Box
       component="img"
       alt={post.title}
-      src={post.coverUrl}
+      src={post.image_url}
       sx={{
         top: 0,
         width: 1,
@@ -142,7 +125,7 @@ export function PostItem({
         }),
       }}
     >
-      {fDate(post.postedAt)}
+      {/*{fDate(post.postedAt)}*/}
     </Typography>
   );
 
