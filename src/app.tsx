@@ -6,6 +6,7 @@ import Fab from '@mui/material/Fab';
 
 import { usePathname } from 'src/routes/hooks';
 
+import { CONFIG } from 'src/config-global';
 import { ThemeProvider } from 'src/theme/theme-provider';
 
 import { Iconify } from 'src/components/iconify';
@@ -25,7 +26,7 @@ export default function App({ children }: AppProps) {
     <Fab
       size="medium"
       aria-label="Github"
-      href="https://github.com/bruceblink/material-kit-react"
+      href={CONFIG.projectUrl}
       sx={{
         zIndex: 9,
         right: 20,
