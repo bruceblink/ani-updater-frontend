@@ -5,11 +5,12 @@ import type { IconifyName } from 'src/components/iconify';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
+import Link from '@mui/material/Link';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
+import { getImageSrc } from 'src/utils/image';
 import { fShortenNumber } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
@@ -101,7 +102,7 @@ export function PostItem({
     <Box
       component="img"
       alt={post.title}
-      src={post.image_url}
+      src={getImageSrc(post.image_url)}
       sx={{
         top: 0,
         width: 1,
