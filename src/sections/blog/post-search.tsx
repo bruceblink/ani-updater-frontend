@@ -10,10 +10,11 @@ import { Iconify } from 'src/components/iconify';
 type PostSearchProps = {
   posts: Ani[];
   sx?: SxProps<Theme>;
-  onInputChange?: (_event: React.SyntheticEvent, value: string) => void;
+  onInputChange?: (_event: React.SyntheticEvent, value: string, reason: string) => void;
+  onSelect?: (_event: React.SyntheticEvent, value: Ani | null, reason: string) => void;
 };
 
-export function PostSearch({ posts, onInputChange }: PostSearchProps) {
+export function PostSearch({ posts, onInputChange, onSelect }: PostSearchProps) {
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -22,7 +23,8 @@ export function PostSearch({ posts, onInputChange }: PostSearchProps) {
       options={posts}
       getOptionLabel={(post) => post.title}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      onInputChange={onInputChange} // 🔹 绑定回调
+      onInputChange={onInputChange}
+      onChange={onSelect}
       filterOptions={(options, state) =>
         options.filter((post) => post.title.toLowerCase().includes(state.inputValue.toLowerCase()))
       } // 本地过滤

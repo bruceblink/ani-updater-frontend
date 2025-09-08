@@ -1,5 +1,3 @@
-import type { SetStateAction } from 'react';
-
 import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -38,14 +36,17 @@ export function BlogView() {
     [items, searchQuery]
   );
 
-  // -------------------
-  // 本地排序（如果需要）
-  const sortedPosts = useMemo(() => [...filteredPosts].sort((a, b) => {
-      if (sortBy === 'latest') return b.update_time - a.update_time;
-      if (sortBy === 'oldest') return a.update_time - b.update_time;
-      // 你可以根据热门字段排序
-      return 0;
-    }), [filteredPosts, sortBy]);
+  // 本地排序
+  const sortedPosts = useMemo(() => {
+    const sorted = [...filteredPosts];
+    if (sortBy === 'latest') return sorted.sort((a, b) => b.update_time - a.update_time);
+    if (sortBy === 'oldest') return sorted.sort((a, b) => a.update_time - b.update_time);
+    if (sortBy === 'popular') {
+      // 按 update_count 数量排序，如果是字符串数字需要 parseInt
+      return sorted.sort((a, b) => parseInt(b.update_count) - parseInt(a.update_count));
+    }
+    return sorted;
+  }, [filteredPosts, sortBy]);
 
   if (loading)
     return (
@@ -85,9 +86,13 @@ export function BlogView() {
       <Box sx={{ mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* 本地搜索 */}
         <PostSearch
-          posts={data.items} // 注意这里传的是当前页的原始 posts
-          sx={{ width: 280 }}
-          onInputChange={(_: any, value: SetStateAction<string>) => setSearchQuery(value)}
+          posts={data.items}
+          onInputChange={(_event, value, reason) => {
+            if (reason === 'input') setSearchQuery(value);
+          }}
+          onSelect={(_event, value) => {
+            if (value) setSearchQuery(value.title); // 点击选项时也更新搜索
+          }}
         />
 
         <PostSort
@@ -123,7 +128,7 @@ export function BlogView() {
 
       <Pagination
         count={data.total_pages}
-        page={page} // ⚡ 使用 state 绑定分页
+        page={page}
         onChange={handleChange}
         color="primary"
         sx={{ mt: 8, mx: 'auto' }}
