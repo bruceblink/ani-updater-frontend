@@ -1,11 +1,12 @@
-import type { Ani } from 'src/hooks/useAniData';
-
-import { useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
+
+import useAniData from 'src/hooks/useAniData';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -14,17 +15,42 @@ import { PostSort } from '../post-sort';
 import { PostSearch } from '../post-search';
 
 // ----------------------------------------------------------------------
-
-type Props = {
-  posts: Ani[];
-};
-
-export function BlogView({ posts }: Props) {
+export function BlogView() {
+  const [page, setPage] = useState(1);  // 当前页码，默认 1
+  const query = useMemo(() => ({ page, page_size: 20 }), [page]);
+  const { data, loading, error } = useAniData(query); // 传给 hook
   const [sortBy, setSortBy] = useState('latest');
 
   const handleSort = useCallback((newSort: string) => {
     setSortBy(newSort);
   }, []);
+
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);  // 更新页码
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  if (error) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        error
+      </Box>
+    );
+  }
+  if (!data) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        没有数据
+      </Box>
+    );
+  }
+  const posts = data.items;
 
   return (
     <DashboardContent>
@@ -80,7 +106,13 @@ export function BlogView({ posts }: Props) {
         })}
       </Grid>
 
-      <Pagination count={10} color="primary" sx={{ mt: 8, mx: 'auto' }} />
+      <Pagination
+        count={data.total_pages}
+        page={data.page}
+        onChange={handleChange}
+        color="primary"
+        sx={{ mt: 8, mx: 'auto' }}
+      />
     </DashboardContent>
   );
 }

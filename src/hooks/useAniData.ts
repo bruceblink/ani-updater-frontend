@@ -1,13 +1,8 @@
+import type { PageData, ApiResponse } from 'src/utils/api';
+
 import {useState, useEffect, useCallback} from 'react';
 
 import api from 'src/utils/api';
-
-/** 后端返回的统一响应格式 */
-export interface ApiResponse<T = unknown> {
-  status: 'ok' | 'error'
-  message?: string
-  data?: T
-}
 
 /** Ani 结构体对应的 TS 接口 */
 export interface Ani {
@@ -24,7 +19,7 @@ export interface Ani {
 
 // Hook 对外暴露的状态
 export type AniData = {
-    data: Ani[];
+    data: PageData<Ani>;
     loading: boolean;
     error: string | null;
     errors: Record<string, string>;
@@ -32,9 +27,19 @@ export type AniData = {
     refresh: () => Promise<void>;
 };
 
+export interface AniQuery {
+  page?: number;       // 可选
+  page_size?: number;  // 可选
+  filter?: AniFilter;     // 可选
+}
 
-export default function useAniData(): AniData {
-    const [data, setData] = useState<Ani[]>([]);
+export interface AniFilter {
+  title?: string;
+  platform?: string;
+}
+
+export default function useAniData(params: AniQuery | null): AniData {
+    const [data, setData] = useState<PageData<Ani>>();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -50,8 +55,10 @@ export default function useAniData(): AniData {
     const fetchData = useCallback(async () => {
         resetState();
         try {
-          const res = await api.get("/api/anis");
-          const a = res.data?.data;
+          const res = await api.get<ApiResponse<PageData<Ani>>>("/api/anis",{
+            params
+          });
+          const a = res.data.data;
           setData(a);
         } catch (e: unknown) {
             const err = e instanceof Error ? e : new Error('未知错误');
@@ -59,17 +66,15 @@ export default function useAniData(): AniData {
         } finally {
             setLoading(false);
         }
-    }, [resetState]);
+    }, [params, resetState]);
 
-    // 初次挂载只读取本地
     useEffect(() => {
         void fetchData();
     }, [fetchData]);
 
-    // 刷新时：先网络拉取再本地加载
     const refresh = useCallback(async () => {
         await fetchData();
     }, [fetchData]);
 
-    return { data, loading, error, errors, refresh };
+    return { data, loading, error, errors, refresh } as AniData;
 }
