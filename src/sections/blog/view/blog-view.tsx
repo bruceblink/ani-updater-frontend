@@ -1,3 +1,5 @@
+import type { SetStateAction } from 'react';
+
 import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -14,67 +16,80 @@ import { PostItem } from '../post-item';
 import { PostSort } from '../post-sort';
 import { PostSearch } from '../post-search';
 
-// ----------------------------------------------------------------------
 export function BlogView() {
   const [page, setPage] = useState(1);  // 当前页码，默认 1
   const query = useMemo(() => ({ page, page_size: 20 }), [page]);
   const { data, loading, error } = useAniData(query); // 传给 hook
   const [sortBy, setSortBy] = useState('latest');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSort = useCallback((newSort: string) => {
     setSortBy(newSort);
   }, []);
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);  // 更新页码
+    setPage(value); // 更新页码
   };
 
-  if (loading) {
+  const items = useMemo(() => data?.items ?? [], [data?.items]);
+  // 本地搜索过滤
+  const filteredPosts = useMemo(
+    () => items.filter((post) => post.title.toLowerCase().includes(searchQuery.toLowerCase())),
+    [items, searchQuery]
+  );
+
+  // -------------------
+  // 本地排序（如果需要）
+  const sortedPosts = useMemo(() => [...filteredPosts].sort((a, b) => {
+      if (sortBy === 'latest') return b.update_time - a.update_time;
+      if (sortBy === 'oldest') return a.update_time - b.update_time;
+      // 你可以根据热门字段排序
+      return 0;
+    }), [filteredPosts, sortBy]);
+
+  if (loading)
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
         <CircularProgress />
       </Box>
     );
-  }
-  if (error) {
+  if (error)
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
         查询出错了: {error}
       </Box>
     );
-  }
-  if (!data) {
+  if (!data)
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
         没有数据
       </Box>
     );
-  }
-  const posts = data.items;
+
+  // -------------------
 
   return (
     <DashboardContent>
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
           今日动漫更新
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <PostSearch posts={posts} />
+      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* 本地搜索 */}
+        <PostSearch
+          posts={data.items} // 注意这里传的是当前页的原始 posts
+          sx={{ width: 280 }}
+          onInputChange={(_: any, value: SetStateAction<string>) => setSearchQuery(value)}
+        />
+
         <PostSort
           sortBy={sortBy}
           onSort={handleSort}
@@ -87,7 +102,7 @@ export function BlogView() {
       </Box>
 
       <Grid container spacing={3}>
-        {posts.map((post, index) => {
+        {sortedPosts.map((post, index) => {
           const latestPostLarge = index === 0;
           const latestPost = index === 1 || index === 2;
 
@@ -108,7 +123,7 @@ export function BlogView() {
 
       <Pagination
         count={data.total_pages}
-        page={data.page}
+        page={page} // ⚡ 使用 state 绑定分页
         onChange={handleChange}
         color="primary"
         sx={{ mt: 8, mx: 'auto' }}
