@@ -39,7 +39,7 @@ export function BlogView() {
   if (error) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-        error
+        查询出错了: {error}
       </Box>
     );
   }
