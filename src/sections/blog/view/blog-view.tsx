@@ -62,7 +62,7 @@ export function BlogView() {
         }}
       >
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Ani
+          今日动漫更新
         </Typography>
       </Box>
 
