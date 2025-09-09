@@ -51,7 +51,7 @@ export default function useAniData(params: AniQuery | null): AniData {
         setErrors({});
     }, []);
 
-    // 从网络拉取并写库
+    // 从网络拉取
     const fetchData = useCallback(async () => {
         resetState();
         try {
