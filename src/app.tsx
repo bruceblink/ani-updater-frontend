@@ -7,12 +7,12 @@ import Fab from '@mui/material/Fab';
 import { usePathname } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/config-global';
+import { AuthProvider } from 'src/context/AuthContext';
 import { ThemeProvider } from 'src/theme/theme-provider';
+import { LatestUpdatedAnimeProvider } from 'src/context/LatestAnimeContext';
 
 import { Iconify } from 'src/components/iconify';
-
-import { AuthProvider } from './context/AuthContext';
-import { LatestUpdatedAnimeProvider } from './context/LatestAnimeContext';
+import { BackToTop } from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +47,7 @@ export default function App({ children }: AppProps) {
       <ThemeProvider>
         <LatestUpdatedAnimeProvider>
           {children}
+          <BackToTop/>
           { CONFIG.isBrowser == "true" ? githubButton() : ""}
         </LatestUpdatedAnimeProvider>
       </ThemeProvider>
