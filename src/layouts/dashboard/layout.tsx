@@ -13,15 +13,16 @@ import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
-import { navData } from '../nav-config-dashboard';
 import { MainSection } from '../core/main-section';
 import { Searchbar } from '../components/searchbar';
+import { getNavData } from '../nav-config-dashboard';
 import { _workspaces } from '../nav-config-workspace';
 import { MenuButton } from '../components/menu-button';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
+import { useLatestUpdatedAnime } from '../../context/LatestAnimeContext';
 import { NotificationsPopover } from '../components/notifications-popover';
 
 import type { MainSectionProps } from '../core/main-section';
@@ -48,9 +49,11 @@ export function DashboardLayout({
   layoutQuery = 'lg',
 }: DashboardLayoutProps) {
   const theme = useTheme();
-
+  // 获取最新的更新数据
+  const {latestUpdateAnimes} = useLatestUpdatedAnime();
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
-
+  // 更新navData的提示数字
+  const navData = getNavData(latestUpdateAnimes?.total_count??0);
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = {
       container: {

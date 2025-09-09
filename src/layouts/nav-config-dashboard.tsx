@@ -1,5 +1,7 @@
 import { SvgColor } from 'src/components/svg-color';
 
+import { Label } from '../components/label';
+
 // ----------------------------------------------------------------------
 
 const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} />;
@@ -11,42 +13,20 @@ export type NavItem = {
   info?: React.ReactNode;
 };
 
-export const navData = [
+export const getNavData = (count: number): NavItem[] => [
   {
     title: 'Dashboard',
     path: '/',
     icon: icon('ic-analytics'),
   },
-/*  {
-    title: 'User',
-    path: '/user',
-    icon: icon('ic-user'),
-  },
-  {
-    title: 'Product',
-    path: '/products',
-    icon: icon('ic-cart'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
-  },
- */
   {
     title: 'Anime',
     path: '/animes',
     icon: icon('ic-blog'),
+    info: count > 0 ? (
+      <Label color="error" variant="inverted">
+        +{count}
+      </Label>
+    ) : null,
   },
-/*  {
-    title: 'Sign in',
-    path: '/sign-in',
-    icon: icon('ic-lock'),
-  },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic-disabled'),
-  },
-  */
 ];

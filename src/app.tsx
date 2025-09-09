@@ -12,6 +12,7 @@ import { ThemeProvider } from 'src/theme/theme-provider';
 import { Iconify } from 'src/components/iconify';
 
 import { AuthProvider } from './context/AuthContext';
+import { LatestUpdatedAnimeProvider } from './context/LatestAnimeContext';
 
 // ----------------------------------------------------------------------
 
@@ -44,8 +45,10 @@ export default function App({ children }: AppProps) {
   return (
     <AuthProvider>
       <ThemeProvider>
-        {children}
-        {githubButton()}
+        <LatestUpdatedAnimeProvider>
+          {children}
+          {githubButton()}
+        </LatestUpdatedAnimeProvider>
       </ThemeProvider>
     </AuthProvider>
   );
