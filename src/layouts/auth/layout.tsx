@@ -8,17 +8,13 @@ import Alert from '@mui/material/Alert';
 
 import { RouterLink } from 'src/routes/components';
 
-import { Logo } from 'src/components/logo';
-
 import { AuthContent } from './content';
-import { MainSection } from '../core/main-section';
-import { LayoutSection } from '../core/layout-section';
-import { HeaderSection } from '../core/header-section';
+import { MainSection , LayoutSection , HeaderSection } from '../core';
 
 import type { AuthContentProps } from './content';
-import type { MainSectionProps } from '../core/main-section';
-import type { HeaderSectionProps } from '../core/header-section';
-import type { LayoutSectionProps } from '../core/layout-section';
+import type { MainSectionProps , HeaderSectionProps , LayoutSectionProps } from '../core';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -118,7 +114,7 @@ export function AuthLayout({
        *************************************** */
       cssVars={{ '--layout-auth-content-width': '420px', ...cssVars }}
       sx={[
-        (theme) => ({
+        (_) => ({
           position: 'relative',
           '&::before': backgroundStyles(),
         }),
