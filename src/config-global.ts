@@ -7,6 +7,7 @@ export type ConfigValue = {
   appVersion: string;
   apiUrl: string;
   projectUrl: string;
+  isBrowser: string;
 };
 
 // 工具函数：优先取 Vercel 环境变量
@@ -20,4 +21,5 @@ export const CONFIG: ConfigValue = {
   appVersion: packageJson.version,
   apiUrl: getEnvVar('VITE_API_URL', 'http://localhost:8000'),
   projectUrl: getEnvVar('VITE_PROJECT_URL', 'https://github.com/bruceblink/ani-updater-frontend'),
+  isBrowser: getEnvVar('VITE_IS_BROWSER', "false"),
 };

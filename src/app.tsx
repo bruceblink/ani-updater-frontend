@@ -47,7 +47,7 @@ export default function App({ children }: AppProps) {
       <ThemeProvider>
         <LatestUpdatedAnimeProvider>
           {children}
-          {githubButton()}
+          { CONFIG.isBrowser == "true" ? githubButton() : ""}
         </LatestUpdatedAnimeProvider>
       </ThemeProvider>
     </AuthProvider>
