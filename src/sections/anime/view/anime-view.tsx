@@ -10,11 +10,11 @@ import useAniData from 'src/hooks/useAniData';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { PostItem } from '../post-item';
-import { PostSort } from '../post-sort';
-import { PostSearch } from '../post-search';
+import { AnimeItem } from '../anime-item';
+import { AnimeSort } from '../anime-sort';
+import { AnimeSearch } from '../anime-search';
 
-export function BlogView() {
+export function AnimeView() {
   const [page, setPage] = useState(1);  // 当前页码，默认 1
   const query = useMemo(() => ({ page, page_size: 20 }), [page]);
   const { data, loading, error } = useAniData(query); // 传给 hook
@@ -85,7 +85,7 @@ export function BlogView() {
 
       <Box sx={{ mb: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* 本地搜索 */}
-        <PostSearch
+        <AnimeSearch
           posts={data.items}
           onInputChange={(_event, value, reason) => {
             if (reason === 'input') setSearchQuery(value);
@@ -95,7 +95,7 @@ export function BlogView() {
           }}
         />
 
-        <PostSort
+        <AnimeSort
           sortBy={sortBy}
           onSort={handleSort}
           options={[
@@ -120,7 +120,7 @@ export function BlogView() {
                 md: latestPostLarge ? 6 : 3,
               }}
             >
-              <PostItem post={post} latestPost={latestPost} latestPostLarge={latestPostLarge} />
+              <AnimeItem post={post} latestPost={latestPost} latestPostLarge={latestPostLarge} />
             </Grid>
           );
         })}

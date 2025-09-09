@@ -18,7 +18,7 @@ type PostSortProps = ButtonProps & {
   options: { value: string; label: string }[];
 };
 
-export function PostSort({ options, sortBy, onSort, sx, ...other }: PostSortProps) {
+export function AnimeSort({ options, sortBy, onSort, sx, ...other }: PostSortProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {

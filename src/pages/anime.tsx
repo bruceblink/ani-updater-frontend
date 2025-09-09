@@ -1,6 +1,6 @@
 import { CONFIG } from 'src/config-global';
 
-import { BlogView } from 'src/sections/blog/view';
+import { AnimeView } from 'src/sections/anime/view';
 
 // ----------------------------------------------------------------------
 
@@ -8,8 +8,8 @@ export default function Page() {
 
   return (
     <>
-      <title>{`Anis - ${CONFIG.appName}`}</title>
-      <BlogView />
+      <title>{`Animes - ${CONFIG.appName}`}</title>
+      <AnimeView />
     </>
   );
 }

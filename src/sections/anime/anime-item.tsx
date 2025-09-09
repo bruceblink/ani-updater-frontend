@@ -17,7 +17,7 @@ import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
-export function PostItem({
+export function AnimeItem({
   sx,
   post,
   latestPost,

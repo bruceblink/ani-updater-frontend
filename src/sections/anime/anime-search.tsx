@@ -14,7 +14,7 @@ type PostSearchProps = {
   onSelect?: (_event: React.SyntheticEvent, value: Ani | null, reason: string) => void;
 };
 
-export function PostSearch({ posts, onInputChange, onSelect }: PostSearchProps) {
+export function AnimeSearch({ posts, onInputChange, onSelect }: PostSearchProps) {
   return (
     <Autocomplete
       sx={{ width: 280 }}

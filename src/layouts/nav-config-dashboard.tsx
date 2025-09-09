@@ -34,8 +34,8 @@ export const navData = [
   },
  */
   {
-    title: 'Ani',
-    path: '/anis',
+    title: 'Anime',
+    path: '/animes',
     icon: icon('ic-blog'),
   },
 /*  {
