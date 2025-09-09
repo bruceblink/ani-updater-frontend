@@ -4,10 +4,9 @@ import Radio from '@mui/material/Radio';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import Rating from '@mui/material/Rating';
+import { FormGroup } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
 import RadioGroup from '@mui/material/RadioGroup';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -15,16 +14,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { ColorPicker } from 'src/components/color-utils';
 
 // ----------------------------------------------------------------------
 
 export type FiltersProps = {
-  price: string;
-  rating: string;
-  gender: string[];
-  colors: string[];
-  category: string;
+  platform: string[];
+  episode: string;
+  //rating: string;
 };
 
 export type AnimeFiltersProps = {
@@ -36,11 +32,9 @@ export type AnimeFiltersProps = {
   onResetFilter: () => void;
   onSetFilters: (updateState: Partial<FiltersProps>) => void;
   options: {
-    colors: string[];
-    ratings: string[];
-    categories: { value: string; label: string }[];
-    genders: { value: string; label: string }[];
-    price: { value: string; label: string }[];
+    //ratings: string[];
+    platforms: { value: string; label: string }[];
+    episodes: { value: string; label: string }[];
   };
 };
 
@@ -54,22 +48,23 @@ export function AnimeFilters({
   onCloseFilter,
   onResetFilter,
 }: AnimeFiltersProps) {
-  const renderGender = (
+
+  const renderPlatform = (
     <Stack spacing={1}>
-      <Typography variant="subtitle2">Gender</Typography>
+      <Typography variant="subtitle2">Platform</Typography>
       <FormGroup>
-        {options.genders.map((option) => (
+        {options.platforms.map((option) => (
           <FormControlLabel
             key={option.value}
             control={
               <Checkbox
-                checked={filters.gender.includes(option.value)}
+                checked={filters.platform.includes(option.value)}
                 onChange={() => {
-                  const checked = filters.gender.includes(option.value)
-                    ? filters.gender.filter((value) => value !== option.value)
-                    : [...filters.gender, option.value];
+                  const checked = filters.platform.includes(option.value)
+                    ? filters.platform.filter((value) => value !== option.value)
+                    : [...filters.platform, option.value];
 
-                  onSetFilters({ gender: checked });
+                  onSetFilters({ platform: checked });
                 }}
               />
             }
@@ -80,89 +75,24 @@ export function AnimeFilters({
     </Stack>
   );
 
-  const renderCategory = (
+  const renderEpisode = (
     <Stack spacing={1}>
-      <Typography variant="subtitle2">Category</Typography>
+      <Typography variant="subtitle2">Episode</Typography>
       <RadioGroup>
-        {options.categories.map((option) => (
+        {options.episodes.map((option) => (
           <FormControlLabel
             key={option.value}
             value={option.value}
             control={
               <Radio
-                checked={filters.category.includes(option.value)}
-                onChange={() => onSetFilters({ category: option.value })}
+                checked={filters.episode.includes(option.value)}
+                onChange={() => onSetFilters({ episode: option.value })}
               />
             }
             label={option.label}
           />
         ))}
       </RadioGroup>
-    </Stack>
-  );
-
-  const renderColors = (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2">Colors</Typography>
-      <ColorPicker
-        options={options.colors}
-        value={filters.colors}
-        onChange={(colors) => onSetFilters({ colors: colors as string[] })}
-        limit={6}
-      />
-    </Stack>
-  );
-
-  const renderPrice = (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2">Price</Typography>
-      <RadioGroup>
-        {options.price.map((option) => (
-          <FormControlLabel
-            key={option.value}
-            value={option.value}
-            control={
-              <Radio
-                checked={filters.price.includes(option.value)}
-                onChange={() => onSetFilters({ price: option.value })}
-              />
-            }
-            label={option.label}
-          />
-        ))}
-      </RadioGroup>
-    </Stack>
-  );
-
-  const renderRating = (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2" sx={{ mb: 2 }}>
-        Rating
-      </Typography>
-
-      {options.ratings.map((option, index) => (
-        <Box
-          key={option}
-          onClick={() => onSetFilters({ rating: option })}
-          sx={{
-            mb: 1,
-            gap: 1,
-            ml: -1,
-            p: 0.5,
-            display: 'flex',
-            borderRadius: 1,
-            cursor: 'pointer',
-            typography: 'body2',
-            alignItems: 'center',
-            '&:hover': { opacity: 0.48 },
-            ...(filters.rating === option && {
-              bgcolor: 'action.selected',
-            }),
-          }}
-        >
-          <Rating readOnly value={4 - index} /> & Up
-        </Box>
-      ))}
     </Stack>
   );
 
@@ -219,11 +149,8 @@ export function AnimeFilters({
 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
-            {renderGender}
-            {renderCategory}
-            {renderColors}
-            {renderPrice}
-            {renderRating}
+            {renderPlatform}
+            {renderEpisode}
           </Stack>
         </Scrollbar>
       </Drawer>

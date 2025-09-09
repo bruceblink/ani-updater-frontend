@@ -1,11 +1,11 @@
 import type { ButtonProps } from '@mui/material/Button';
 
 import { useState, useCallback } from 'react';
-import { varAlpha } from 'minimal-shared/utils';
 
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import MenuList from '@mui/material/MenuList';
+import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
 import { Iconify } from 'src/components/iconify';
@@ -39,19 +39,16 @@ export function AnimeSort({ options, sortBy, onSort, sx, ...other }: PostSortPro
           <Iconify
             icon={openPopover ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
             sx={{
-              ml: -0.5,
+              ml: 0.5,
             }}
           />
         }
-        sx={[
-          {
-            bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
-          },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        ]}
         {...other}
       >
-        {options.find((option) => option.value === sortBy)?.label}
+        Sort By:&nbsp;
+        <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
+          {options.find((option) => option.value === sortBy)?.label}
+        </Typography>
       </Button>
 
       <Popover

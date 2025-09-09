@@ -13,6 +13,32 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { AnimeItem } from '../anime-item';
 import { AnimeSort } from '../anime-sort';
 import { AnimeSearch } from '../anime-search';
+import { AnimeFilters } from '../anime-filters';
+
+import type { FiltersProps } from '../anime-filters';
+
+
+const PLATFORM_OPTIONS = [
+  { value: 'agedm', label: 'Agedm' },
+  { value: 'bilibili', label: 'Bilibili' },
+  { value: 'iqiyi', label: 'Iqiyi' },
+  { value: 'tencent', label: 'Tencent' },
+  { value: 'youku', label: 'Youku' },
+];
+
+/*const RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];*/
+
+const EPISODE_OPTIONS = [
+  { value: 'below', label: 'Below 25' },
+  { value: 'between', label: 'Between 25 - 75' },
+  { value: 'above', label: 'Above 75' },
+];
+
+const defaultFilters = {
+  episode: '',
+  platform: [PLATFORM_OPTIONS[0].value],
+};
+
 
 export function AnimeView() {
   const [page, setPage] = useState(1);  // 当前页码，默认 1
@@ -47,6 +73,28 @@ export function AnimeView() {
     }
     return sorted;
   }, [filteredPosts, sortBy]);
+
+
+  const [openFilter, setOpenFilter] = useState(false);
+
+  const [filters, setFilters] = useState<FiltersProps>(defaultFilters);
+
+  const handleOpenFilter = useCallback(() => {
+    setOpenFilter(true);
+  }, []);
+
+  const handleCloseFilter = useCallback(() => {
+    setOpenFilter(false);
+  }, []);
+
+
+  const handleSetFilters = useCallback((updateState: Partial<FiltersProps>) => {
+    setFilters((prevValue) => ({ ...prevValue, ...updateState }));
+  }, []);
+
+  const canReset = Object.keys(filters).some(
+    (key) => filters[key as keyof FiltersProps] !== defaultFilters[key as keyof FiltersProps]
+  );
 
   if (loading)
     return (
@@ -94,16 +142,38 @@ export function AnimeView() {
             if (value) setSearchQuery(value.title); // 点击选项时也更新搜索
           }}
         />
+        <Box
+          sx={{
+            my: 1,
+            gap: 1,
+            flexShrink: 0,
+            display: 'flex',
+          }}
+        >
+          <AnimeFilters
+            canReset={canReset}
+            filters={filters}
+            onSetFilters={handleSetFilters}
+            openFilter={openFilter}
+            onOpenFilter={handleOpenFilter}
+            onCloseFilter={handleCloseFilter}
+            onResetFilter={() => setFilters(defaultFilters)}
+            options={{
+              platforms: PLATFORM_OPTIONS,
+              episodes: EPISODE_OPTIONS,
+            }}
+          />
 
-        <AnimeSort
-          sortBy={sortBy}
-          onSort={handleSort}
-          options={[
-            { value: 'latest', label: 'Latest' },
-            { value: 'popular', label: 'Popular' },
-            { value: 'oldest', label: 'Oldest' },
-          ]}
-        />
+          <AnimeSort
+            sortBy={sortBy}
+            onSort={handleSort}
+            options={[
+              { value: 'latest', label: 'Latest' },
+              { value: 'popular', label: 'Popular' },
+              { value: 'oldest', label: 'Oldest' },
+            ]}
+          />
+        </Box>
       </Box>
 
       <Grid container spacing={3}>
