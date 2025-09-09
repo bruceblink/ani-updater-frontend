@@ -1,6 +1,7 @@
 ![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-![preview](public/assets/images/minimal-free-preview.png)
+![preview](public/assets/images/dashboard.png)
+![preview](public/assets/images/anime.png)
 
 > Free React Admin Dashboard made with Material-UI components and React + Vite.js base on [minimal.free](https://github.com/minimal-ui-kit/minimal.free).
 
