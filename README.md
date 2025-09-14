@@ -14,6 +14,7 @@
 - **Start:** `npm run dev` or `yarn dev`
 - **Build:** `npm run build` or `yarn build`
 - Open browser: `http://localhost:3039`
+- Just support login with github now
 - the backend's project can use [ani-updater](https://github.com/bruceblink/ani-updater)
 
 ## License
