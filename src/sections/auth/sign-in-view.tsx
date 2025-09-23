@@ -131,7 +131,7 @@ export function SignInView() {
           color="inherit"
           onClick={() => {
             // 重定向到后端 GitHub 登录接口
-            window.location.href = `${CONFIG.apiUrl}/auth/github/login`;
+            window.location.href = `${CONFIG.apiUrl}/auth/github/login?redirect_uri=${encodeURIComponent(window.location.origin)}`;
           }}
         >
           <Iconify width={22} icon="socials:github" />
