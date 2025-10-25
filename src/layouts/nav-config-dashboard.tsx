@@ -7,26 +7,27 @@ import { Label } from '../components/label';
 const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} />;
 
 export type NavItem = {
-  title: string;
-  path: string;
-  icon: React.ReactNode;
-  info?: React.ReactNode;
+    title: string;
+    path: string;
+    icon: React.ReactNode;
+    info?: React.ReactNode;
 };
 
 export const getNavData = (count: number): NavItem[] => [
-  {
-    title: 'Dashboard',
-    path: '/',
-    icon: icon('ic-analytics'),
-  },
-  {
-    title: 'Anime',
-    path: '/animes',
-    icon: icon('ic-blog'),
-    info: count > 0 ? (
-      <Label color="error" variant="inverted">
-        +{count}
-      </Label>
-    ) : null,
-  },
+    {
+        title: 'Dashboard',
+        path: '/',
+        icon: icon('ic-analytics'),
+    },
+    {
+        title: 'Anime',
+        path: '/animes',
+        icon: icon('ic-blog'),
+        info:
+            count > 0 ? (
+                <Label color="error" variant="inverted">
+                    +{count}
+                </Label>
+            ) : null,
+    },
 ];

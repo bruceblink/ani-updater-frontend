@@ -1,20 +1,20 @@
 import type { PageData, ApiResponse } from 'src/utils/api';
 
-import {useState, useEffect, useCallback} from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import api from 'src/utils/api';
 
 /** Ani 结构体对应的 TS 接口 */
 export interface Ani {
-  id: number;
-  title: string;
-  update_count: string;
-  detail_url: string;
-  image_url: string;
-  update_info: string;
-  update_time: number;
-  update_time_str: string;
-  platform: string;
+    id: number;
+    title: string;
+    update_count: string;
+    detail_url: string;
+    image_url: string;
+    update_info: string;
+    update_time: number;
+    update_time_str: string;
+    platform: string;
 }
 
 // Hook 对外暴露的状态
@@ -28,14 +28,14 @@ export type AniData = {
 };
 
 export interface AniQuery {
-  page?: number;       // 可选
-  page_size?: number;  // 可选
-  filter?: AniFilter;     // 可选
+    page?: number; // 可选
+    page_size?: number; // 可选
+    filter?: AniFilter; // 可选
 }
 
 export interface AniFilter {
-  title?: string;
-  platform?: string;
+    title?: string;
+    platform?: string;
 }
 
 export default function useAniData(params: AniQuery | null): AniData {
@@ -55,11 +55,11 @@ export default function useAniData(params: AniQuery | null): AniData {
     const fetchData = useCallback(async () => {
         resetState();
         try {
-          const res = await api.get<ApiResponse<PageData<Ani>>>("/api/anis",{
-            params
-          });
-          const a = res.data.data;
-          setData(a);
+            const res = await api.get<ApiResponse<PageData<Ani>>>('/api/anis', {
+                params,
+            });
+            const a = res.data.data;
+            setData(a);
         } catch (e: unknown) {
             const err = e instanceof Error ? e : new Error('未知错误');
             setError(err.message);

@@ -13,7 +13,11 @@ function ScrollTop(props: { window?: () => Window; children: React.ReactElement 
     });
 
     const handleClick = () => {
-        const targetWindow = windowFunc ? windowFunc() : (typeof window !== 'undefined' ? window : undefined);
+        const targetWindow = windowFunc
+            ? windowFunc()
+            : typeof window !== 'undefined'
+              ? window
+              : undefined;
         if (targetWindow) {
             targetWindow.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -35,9 +39,9 @@ function ScrollTop(props: { window?: () => Window; children: React.ReactElement 
 export function BackToTop(props: { window?: () => Window }) {
     return (
         <ScrollTop {...props}>
-                <Fab color="primary" size="small" aria-label="scroll back to top">
-                    <KeyboardArrowUpIcon />
-                </Fab>
-            </ScrollTop>
+            <Fab color="primary" size="small" aria-label="scroll back to top">
+                <KeyboardArrowUpIcon />
+            </Fab>
+        </ScrollTop>
     );
 }

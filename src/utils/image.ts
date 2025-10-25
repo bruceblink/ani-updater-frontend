@@ -9,14 +9,14 @@ const ALLOWED_KEYWORDS = ['hdslb.com', 'iqiyipic.com'] as const;
  * 判断 URL 是否包含白名单关键字
  */
 export function isAllowedHost(url: string): boolean {
-  if (!url) return false;
+    if (!url) return false;
 
-  // 相对路径 (./ 或 / 开头) 不代理
-  if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
-    return false;
-  }
+    // 相对路径 (./ 或 / 开头) 不代理
+    if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
+        return false;
+    }
 
-  return ALLOWED_KEYWORDS.some((domain) => url.includes(domain));
+    return ALLOWED_KEYWORDS.some((domain) => url.includes(domain));
 }
 
 /**
@@ -25,9 +25,9 @@ export function isAllowedHost(url: string): boolean {
  * - 否则返回原始 url（不走代理）
  */
 export function getImageSrc(url: string): string {
-  if (!url) return url;
-  // 如果是 data: 或 blob: 也不走代理
-  if (url.startsWith('data:') || url.startsWith('blob:')) return url;
+    if (!url) return url;
+    // 如果是 data: 或 blob: 也不走代理
+    if (url.startsWith('data:') || url.startsWith('blob:')) return url;
 
-  return isAllowedHost(url) ? PROXY_PREFIX + encodeURIComponent(url) : url;
+    return isAllowedHost(url) ? PROXY_PREFIX + encodeURIComponent(url) : url;
 }

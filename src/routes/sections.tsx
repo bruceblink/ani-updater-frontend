@@ -23,58 +23,58 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
-  <Box
-    sx={{
-      display: 'flex',
-      flex: '1 1 auto',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
-    <LinearProgress
-      sx={{
-        width: 1,
-        maxWidth: 320,
-        bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
-        [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' },
-      }}
-    />
-  </Box>
+    <Box
+        sx={{
+            display: 'flex',
+            flex: '1 1 auto',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}
+    >
+        <LinearProgress
+            sx={{
+                width: 1,
+                maxWidth: 320,
+                bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
+                [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' },
+            }}
+        />
+    </Box>
 );
 
 export const routesSection: RouteObject[] = [
-  {
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout>
-          <Suspense fallback={renderFallback()}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </ProtectedRoute>
-    ),
-    children: [
-      { index: true, element: <DashboardPage /> },
-/*      { path: 'user', element: <UserPage /> },
+    {
+        element: (
+            <ProtectedRoute>
+                <DashboardLayout>
+                    <Suspense fallback={renderFallback()}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </ProtectedRoute>
+        ),
+        children: [
+            { index: true, element: <DashboardPage /> },
+            /*      { path: 'user', element: <UserPage /> },
       { path: 'products', element: <ProductsPage /> },*/
-      { path: 'animes', element: <BlogPage /> },
-    ],
-  },
-  {
-    path: 'sign-in',
-    element: (
-      <AuthLayout>
-        <SignInPage />
-      </AuthLayout>
-    ),
-  },
-  {
-    path: 'auth/callback',   // ✅ GitHub OAuth 登录回调
-    element: <OAuthCallbackHandler />,
-  },
-  {
-    path: '404',
-    element: <Page404 />,
-  },
-  { path: '*', element: <Page404 /> },
+            { path: 'animes', element: <BlogPage /> },
+        ],
+    },
+    {
+        path: 'sign-in',
+        element: (
+            <AuthLayout>
+                <SignInPage />
+            </AuthLayout>
+        ),
+    },
+    {
+        path: 'auth/callback', // ✅ GitHub OAuth 登录回调
+        element: <OAuthCallbackHandler />,
+    },
+    {
+        path: '404',
+        element: <Page404 />,
+    },
+    { path: '*', element: <Page404 /> },
 ];
