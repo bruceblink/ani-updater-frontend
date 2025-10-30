@@ -10,24 +10,27 @@ import { useTheme } from '@mui/material/styles';
 import { _langs, _notifications } from 'src/_mock';
 
 import { NavMobile, NavDesktop } from './nav';
-import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
-import { MainSection } from '../core/main-section';
 import { Searchbar } from '../components/searchbar';
 import { getNavData } from '../nav-config-dashboard';
 import { _workspaces } from '../nav-config-workspace';
 import { MenuButton } from '../components/menu-button';
-import { HeaderSection } from '../core/header-section';
-import { LayoutSection } from '../core/layout-section';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { useLatestUpdatedAnime } from '../../context/LatestAnimeContext';
 import { NotificationsPopover } from '../components/notifications-popover';
+import {
+    MainSection,
+    HeaderSection,
+    LayoutSection,
+    layoutClasses
+} from '../core';
 
-import type { MainSectionProps } from '../core/main-section';
-import type { HeaderSectionProps } from '../core/header-section';
-import type { LayoutSectionProps } from '../core/layout-section';
+import type {
+    MainSectionProps,
+    HeaderSectionProps,
+    LayoutSectionProps} from '../core';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +56,7 @@ export function DashboardLayout({
     const { latestUpdateAnimes } = useLatestUpdatedAnime();
     const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
     // 更新navData的提示数字
-    const navData = getNavData(latestUpdateAnimes?.total_count ?? 0);
+    const navData = getNavData(latestUpdateAnimes?.totalCount ?? 0);
     const renderHeader = () => {
         const headerSlotProps: HeaderSectionProps['slotProps'] = {
             container: {

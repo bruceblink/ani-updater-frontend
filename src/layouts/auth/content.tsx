@@ -4,7 +4,7 @@ import { mergeClasses } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 
-import { layoutClasses } from '../core/classes';
+import { layoutClasses } from '../core';
 
 // ----------------------------------------------------------------------
 

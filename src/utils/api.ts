@@ -14,10 +14,10 @@ export interface ApiResponse<T = unknown> {
 
 export interface PageData<T> {
     items: T[]; // 当前页的数据
-    total_count: number; // 总条数
+    totalCount: number; // 总条数
     page: number; // 当前页码（1开始）
-    page_size: number; // 每页数量
-    total_pages: number; // 总页数
+    pageSize: number; // 每页数量
+    totalPages: number; // 总页数
 }
 
 // ---- 类型增强：给 axios 的 config 增加一个开关字段 ----

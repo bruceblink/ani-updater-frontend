@@ -31,7 +31,7 @@ export function AnimeItem({
     const renderAvatar = (
         <Avatar
             alt={post.title}
-            src={post.detail_url}
+            src={post.detailUrl}
             sx={{
                 left: 24,
                 zIndex: 9,
@@ -77,9 +77,9 @@ export function AnimeItem({
             }}
         >
             {[
-                { number: post.update_count, icon: 'solar:chat-round-dots-bold' },
-                { number: post.update_count, icon: 'solar:eye-bold' },
-                { number: post.update_count, icon: 'solar:share-bold' },
+                { number: post.updateCount, icon: 'solar:chat-round-dots-bold' },
+                { number: post.updateCount, icon: 'solar:eye-bold' },
+                { number: post.updateCount, icon: 'solar:share-bold' },
             ].map((info, _index) => (
                 <Box
                     key={_index}
@@ -102,7 +102,7 @@ export function AnimeItem({
         <Box
             component="img"
             alt={post.title}
-            src={getImageSrc(post.image_url)}
+            src={getImageSrc(post.imageUrl)}
             sx={{
                 top: 0,
                 width: 1,

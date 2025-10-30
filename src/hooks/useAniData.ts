@@ -8,12 +8,12 @@ import api from 'src/utils/api';
 export interface Ani {
     id: number;
     title: string;
-    update_count: string;
-    detail_url: string;
-    image_url: string;
-    update_info: string;
-    update_time: number;
-    update_time_str: string;
+    updateCount: string;
+    detailUrl: string;
+    imageUrl: string;
+    updateInfo: string;
+    updateTime: number;
+    updateTimeStr: string;
     platform: string;
 }
 
@@ -29,7 +29,7 @@ export type AniData = {
 
 export interface AniQuery {
     page?: number; // 可选
-    page_size?: number; // 可选
+    pageSize?: number; // 可选
     filter?: AniFilter; // 可选
 }
 

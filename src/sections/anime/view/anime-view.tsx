@@ -63,11 +63,11 @@ export function AnimeView() {
     // 本地排序
     const sortedPosts = useMemo(() => {
         const sorted = [...filteredPosts];
-        if (sortBy === 'latest') return sorted.sort((a, b) => b.update_time - a.update_time);
-        if (sortBy === 'oldest') return sorted.sort((a, b) => a.update_time - b.update_time);
+        if (sortBy === 'latest') return sorted.sort((a, b) => b.updateTime - a.updateTime);
+        if (sortBy === 'oldest') return sorted.sort((a, b) => a.updateTime - b.updateTime);
         if (sortBy === 'popular') {
             // 按 update_count 数量排序，如果是字符串数字需要 parseInt
-            return sorted.sort((a, b) => parseInt(b.update_count) - parseInt(a.update_count));
+            return sorted.sort((a, b) => parseInt(b.updateCount) - parseInt(a.updateCount));
         }
         return sorted;
     }, [filteredPosts, sortBy]);
@@ -219,7 +219,7 @@ export function AnimeView() {
             </Grid>
 
             <Pagination
-                count={data.total_pages}
+                count={data.totalPages}
                 page={page}
                 onChange={handleChange}
                 color="primary"
