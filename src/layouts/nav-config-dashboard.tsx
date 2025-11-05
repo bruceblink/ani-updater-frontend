@@ -30,4 +30,9 @@ export const getNavData = (count: number): NavItem[] => [
                 </Label>
             ) : null,
     },
+    {
+        title: 'News',
+        path: '/news',
+        icon: icon('ic-blog'),
+    },
 ];
