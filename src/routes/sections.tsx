@@ -13,6 +13,8 @@ import OAuthCallbackHandler from 'src/pages/oauth-callback';
 
 import { ProtectedRoute } from 'src/components/routes/ProtectedRoute';
 
+import { ChartsView } from '../sections/charts/view';
+
 // ----------------------------------------------------------------------
 
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
@@ -20,7 +22,7 @@ export const BlogPage = lazy(() => import('src/pages/anime'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
-export const NewsPage = lazy(() => import('src/pages/news'));
+export const ChartsPage = lazy(() => import('src/pages/charts'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -57,7 +59,7 @@ export const routesSection: RouteObject[] = [
         children: [
             { index: true, element: <DashboardPage /> },
             /*{ path: 'user', element: <UserPage /> },*/
-            { path: 'news', element: <NewsPage /> },
+            { path: 'charts', element: <ChartsView /> },
             { path: 'animes', element: <BlogPage /> },
         ],
     },
