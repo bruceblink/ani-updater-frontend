@@ -43,9 +43,6 @@ export function setOnAuthInvalid(handler: (() => void) | null) {
     onAuthInvalid = handler;
 }
 
-// —— 可选：全局 loading / 错误 —— //
-const showGlobalError = (msg: string) => console.error(msg);
-
 // 请求拦截器
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('access_token');
@@ -100,8 +97,6 @@ api.interceptors.response.use(
                 });
             });
         }
-
-        showGlobalError(error.message || '请求失败');
         return Promise.reject(error);
     }
 );
