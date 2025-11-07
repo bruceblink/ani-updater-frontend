@@ -2,6 +2,8 @@ import path from 'path';
 import checker from 'vite-plugin-checker';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import { createHtmlPlugin } from 'vite-plugin-html';
+import process from 'node:process';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +24,17 @@ export default defineConfig({
         initialIsOpen: false,
       },
     }),
+      createHtmlPlugin({
+          inject: {
+              // 将数据注入到index.html中
+              data: {
+                  // 可以直接使用加载到的环境变量
+                  title: process.env.VITE_APP_TITLE,
+                  // 也可以注入其他自定义数据
+                  // injectData: 'Some static data'
+              },
+          },
+      }),
   ],
   resolve: {
     alias: [
