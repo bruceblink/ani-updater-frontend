@@ -4,6 +4,7 @@ import packageJson from '../package.json';
 
 export type ConfigValue = {
     appName: string;
+    appTitle: string;
     appVersion: string;
     apiUrl: string;
     projectUrl: string;
@@ -17,7 +18,8 @@ function getEnvVar(key: string, fallback: string): string {
 }
 
 export const CONFIG: ConfigValue = {
-    appName: 'Ani Updater',
+    appName: getEnvVar('VITE_APP_NAME', 'Ani Updater'),
+    appTitle: getEnvVar('VITE_APP_TITLE', 'Ani Updater'),
     appVersion: packageJson.version,
     apiUrl: getEnvVar('VITE_API_URL', 'http://localhost:8000'),
     projectUrl: getEnvVar('VITE_PROJECT_URL', 'https://github.com/bruceblink/ani-updater-frontend'),
