@@ -1,8 +1,10 @@
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import { _posts } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import NewsItem from '../news-charts';
+import { NewsCard } from '../news-card';
 
 
 export function NewsView() {
@@ -13,7 +15,7 @@ export function NewsView() {
             <Typography variant="h4" sx={{ mb: 5 }}>
                 News
             </Typography>
-            <NewsItem/>
+            <NewsCard title="NewsView" list={_posts.slice(0, 5)} />
         </DashboardContent>
     );
 }
