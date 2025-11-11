@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import { _posts } from 'src/_mock';
