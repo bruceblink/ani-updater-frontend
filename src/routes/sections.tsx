@@ -18,11 +18,12 @@ import { ChartsView } from '../sections/charts/view';
 // ----------------------------------------------------------------------
 
 export const DashboardPage = lazy(() => import('src/pages/dashboard'));
-export const BlogPage = lazy(() => import('src/pages/anime'));
+export const AnimePage = lazy(() => import('src/pages/anime'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ChartsPage = lazy(() => import('src/pages/charts'));
+export const NewsPage = lazy(() => import('src/pages/news'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -60,7 +61,8 @@ export const routesSection: RouteObject[] = [
             { index: true, element: <DashboardPage /> },
             /*{ path: 'user', element: <UserPage /> },*/
             { path: 'charts', element: <ChartsView /> },
-            { path: 'animes', element: <BlogPage /> },
+            { path: 'animes', element: <AnimePage /> },
+            { path: 'news', element: <NewsPage /> },
         ],
     },
     {

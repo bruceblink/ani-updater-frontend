@@ -35,4 +35,10 @@ export const getNavData = (count: number): NavItem[] => [
         path: '/charts',
         icon: icon('ic-blog'),
     },
+    {
+        title: 'News',
+        path: '/news',
+        icon: icon('ic-blog'),
+        info: null,
+    },
 ];

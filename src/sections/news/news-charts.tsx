@@ -1,7 +1,7 @@
 import * as echarts from "echarts";
 import { useRef, useEffect } from 'react';
 
-import { useRealtimeData } from '../../hooks/useRealtimeData';
+import { useRealtimeData } from 'src/hooks/useRealtimeData';
 
 export default function NewsItem() {
     const chartRef = useRef<HTMLDivElement | null>(null);
