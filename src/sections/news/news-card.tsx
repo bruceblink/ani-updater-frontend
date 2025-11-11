@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import CardHeader from '@mui/material/CardHeader';
 import ListItemText from '@mui/material/ListItemText';
 
 import { fToNow } from 'src/utils/format-time';
@@ -30,7 +31,7 @@ type Props = CardProps & {
 export function NewsCard({ title, subheader, list, sx, ...other }: Props) {
     return (
         <Card sx={sx} {...other}>
-
+            <CardHeader title={title} subheader={subheader} sx={{ mb: 1 }} />
             <Scrollbar sx={{ minHeight: 405 }}>
                 <Box sx={{ minWidth: 640 }}>
                     {list.map((item) => (
