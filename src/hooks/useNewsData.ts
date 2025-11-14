@@ -4,13 +4,20 @@ import { useState, useEffect, useCallback } from 'react';
 
 import api from 'src/utils/api';
 
-/** Ani 结构体对应的 TS 接口 */
+/** News 结构体对应的 TS 接口 */
 export interface News {
+    id: number;
     newsFrom: string;
     newsDate: string;
-    data: string;
+    data: Record<string, NewsItem[]>;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface NewsItem {
+    id: number;
+    url: string;
+    title: string;
 }
 
 // Hook 对外暴露的状态
