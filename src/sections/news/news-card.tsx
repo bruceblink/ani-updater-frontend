@@ -1,5 +1,6 @@
 import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
+import type { NewsItem } from 'src/hooks/useNewsData';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -19,13 +20,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 type Props = CardProps & {
     title?: string;
     subheader?: string;
-    list: {
-        id: string;
-        title: string;
-        coverUrl: string;
-        description: string;
-        postedAt: string | number | null;
-    }[];
+    list: NewsItem[];
 };
 
 export function NewsCard({ title, subheader, list, sx, ...other }: Props) {
@@ -77,16 +72,10 @@ function Item({ item, sx, ...other }: ItemProps) {
             ]}
             {...other}
         >
-            <Avatar
-                variant="rounded"
-                alt={item.title}
-                src={item.coverUrl}
-                sx={{ width: 48, height: 48, flexShrink: 0 }}
-            />
 
             <ListItemText
                 primary={<Link color="inherit">{item.title}</Link>}
-                secondary={item.description}
+                secondary={item.title}
                 slotProps={{
                     primary: { noWrap: true },
                     secondary: {
@@ -97,7 +86,7 @@ function Item({ item, sx, ...other }: ItemProps) {
             />
 
             <Box sx={{ flexShrink: 0, typography: 'caption', color: 'text.disabled' }}>
-                {fToNow(item.postedAt)}
+                {fToNow(item.url)}
             </Box>
         </Box>
     );

@@ -1,13 +1,64 @@
+import { useMemo, useState } from 'react';
+
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-import { _posts, _products } from 'src/_mock';
+import useNewsData from 'src/hooks/useNewsData';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { NewsCard } from '../news-card';
 
 
 export function NewsView() {
+
+    const [page, setPage] = useState(1); // 当前页码，默认 1
+    const query = useMemo(() => ({ page, page_size: 6 }), [page]);
+    const { data, loading, error } = useNewsData(query); // 传给 hook
+    // 获取news items
+    const items = useMemo(() => data?.items ?? [], [data?.items]);
+
+    if (loading)
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    if (error)
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                查询出错了: {error}
+            </Box>
+        );
+    if (!data)
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                没有数据
+            </Box>
+        );
 
     return (
         <DashboardContent>
@@ -17,9 +68,12 @@ export function NewsView() {
             </Typography>
 
             <Grid container spacing={3}>
-                {_products.map((product) => (
-                    <Grid key={product.id} size={{ xs: 12, sm: 8, md: 6, lg: 4 }}>
-                        <NewsCard title={product.name} list={_posts.slice(0, 5)} />
+                {items.map((news) => (
+                    <Grid key={news.id} size={{ xs: 12, sm: 8, md: 6, lg: 4 }}>
+                        <NewsCard
+                            title={news.newsFrom}
+                            list={news.data.items?.slice(0, 5) ?? []}
+                        />
                     </Grid>
                 ))}
             </Grid>
