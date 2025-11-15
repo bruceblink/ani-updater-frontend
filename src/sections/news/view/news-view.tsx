@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
 
 import useNewsData from 'src/hooks/useNewsData';
 
@@ -19,6 +20,10 @@ export function NewsView() {
     const { data, loading, error } = useNewsData(query); // 传给 hook
     // 获取news items
     const items = useMemo(() => data?.items ?? [], [data?.items]);
+
+    const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value); // 更新页码
+    };
 
     if (loading)
         return (
@@ -77,6 +82,13 @@ export function NewsView() {
                     </Grid>
                 ))}
             </Grid>
+            <Pagination
+                count={data.totalPages}
+                page={page}
+                onChange={handleChange}
+                color="primary"
+                sx={{ mt: 8, mx: 'auto' }}
+            />
         </DashboardContent>
     );
 }
