@@ -41,4 +41,10 @@ export const getNavData = (count: number): NavItem[] => [
         icon: icon('ic-blog'),
         info: null,
     },
+    {
+        title: 'ScheduledTasks',
+        path: '/scheduledTasks',
+        icon: icon('ic-blog'),
+        info: null,
+    },
 ];
