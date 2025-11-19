@@ -16,13 +16,13 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
 import { TableNoData } from '../table-no-data';
-import { UserTableRow } from '../user-table-row';
-import { UserTableHead } from '../user-table-head';
+import { TaskTableRow } from '../task-table-row';
+import { TaskTableHead } from '../task-table-head';
 import { TableEmptyRows } from '../table-empty-rows';
-import { UserTableToolbar } from '../user-table-toolbar';
+import { TaskTableToolbar } from '../task-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-import type { UserProps } from '../user-table-row';
+import type { UserProps } from '../task-table-row';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ export function ScheduledTaskView() {
             </Box>
 
             <Card>
-                <UserTableToolbar
+                <TaskTableToolbar
                     numSelected={table.selected.length}
                     filterName={filterName}
                     onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +73,7 @@ export function ScheduledTaskView() {
                 <Scrollbar>
                     <TableContainer sx={{ overflow: 'unset' }}>
                         <Table sx={{ minWidth: 800 }}>
-                            <UserTableHead
+                            <TaskTableHead
                                 order={table.order}
                                 orderBy={table.orderBy}
                                 rowCount={_users.length}
@@ -101,7 +101,7 @@ export function ScheduledTaskView() {
                                         table.page * table.rowsPerPage + table.rowsPerPage
                                     )
                                     .map((row) => (
-                                        <UserTableRow
+                                        <TaskTableRow
                                             key={row.id}
                                             row={row}
                                             selected={table.selected.includes(row.id)}

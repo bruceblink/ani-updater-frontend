@@ -15,7 +15,7 @@ type UserTableToolbarProps = {
     onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function UserTableToolbar({ numSelected, filterName, onFilterName }: UserTableToolbarProps) {
+export function TaskTableToolbar({ numSelected, filterName, onFilterName }: UserTableToolbarProps) {
     return (
         <Toolbar
             sx={{

@@ -31,7 +31,7 @@ type UserTableRowProps = {
     onSelectRow: () => void;
 };
 
-export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
+export function TaskTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
     const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
     const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
