@@ -73,8 +73,16 @@ function Item({ item, sx, ...other }: ItemProps) {
         >
 
             <ListItemText
-                primary={<Link color="inherit">{item.title}</Link>}
-                secondary={item.title}
+                primary={
+                    <Link
+                        href={item.url}
+                        color="inherit"
+                        target="_blank"  // 在新标签页打开
+                        rel="noopener noreferrer"  // 安全属性
+                    >
+                        {item.title}
+                    </Link>
+                }
                 slotProps={{
                     primary: { noWrap: true },
                     secondary: {
