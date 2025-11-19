@@ -16,7 +16,7 @@ import { NewsCard } from '../news-card';
 export function NewsView() {
 
     const [page, setPage] = useState(1); // 当前页码，默认 1
-    const query = useMemo(() => ({ page, page_size: 6 }), [page]);
+    const query = useMemo(() => ({ page, pageSize: 18 }), [page]);
     const { data, loading, error } = useNewsData(query); // 传给 hook
     // 获取news items
     const items = useMemo(() => data?.items ?? [], [data?.items]);
