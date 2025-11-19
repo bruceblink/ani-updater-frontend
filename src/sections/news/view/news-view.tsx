@@ -76,7 +76,7 @@ export function NewsView() {
                 {items.map((news) => (
                     <Grid key={news.id} size={{ xs: 12, sm: 8, md: 6, lg: 4 }}>
                         <NewsCard
-                            title={news.newsFrom}
+                            title={`${news.newsFrom} (${news.newsDate})` }
                             list={news.data.items?.slice(0, 10) ?? []}
                         />
                     </Grid>
