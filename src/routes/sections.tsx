@@ -24,6 +24,7 @@ export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ChartsPage = lazy(() => import('src/pages/charts'));
 export const NewsPage = lazy(() => import('src/pages/news'));
+export const ScheduledTasksPage = lazy(() => import('src/pages/scheduled-tasks'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -63,6 +64,7 @@ export const routesSection: RouteObject[] = [
             { path: 'charts', element: <ChartsView /> },
             { path: 'animes', element: <AnimePage /> },
             { path: 'news', element: <NewsPage /> },
+            { path: 'scheduledTasks', element: <ScheduledTasksPage /> },
         ],
     },
     {
