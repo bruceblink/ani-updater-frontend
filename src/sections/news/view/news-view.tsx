@@ -77,7 +77,7 @@ export function NewsView() {
                     <Grid key={news.id} size={{ xs: 12, sm: 8, md: 6, lg: 4 }}>
                         <NewsCard
                             title={news.newsFrom}
-                            list={news.data.items?.slice(0, 5) ?? []}
+                            list={news.data.items?.slice(0, 10) ?? []}
                         />
                     </Grid>
                 ))}
