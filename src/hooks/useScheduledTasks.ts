@@ -6,14 +6,15 @@ import api from 'src/utils/api';
 
 /** ScheduledTask 结构体对应的 TS 接口 */
 export interface ScheduledTask {
+    id: string;
     name: string;
     cron: string;
-    params: JSON;
-    is_enabled: boolean;
-    retry_times: number;
-    last_run: string;
-    next_run: string;
-    last_status: string;
+    params: any;
+    isEnabled: boolean;
+    retryTimes: number;
+    lastRun: string;
+    nextRun: string;
+    lastStatus: string;
 }
 
 // Hook 对外暴露的状态

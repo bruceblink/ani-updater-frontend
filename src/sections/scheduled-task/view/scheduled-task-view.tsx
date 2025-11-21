@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,7 +9,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { _users } from 'src/_mock';
+import useScheduledTasksData, { type ScheduledTask } from 'src/hooks/useScheduledTasks';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -22,17 +23,21 @@ import { TableEmptyRows } from '../table-empty-rows';
 import { TaskTableToolbar } from '../task-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-import type { UserProps } from '../task-table-row';
 
 // ----------------------------------------------------------------------
 
 export function ScheduledTaskView() {
     const table = useTable();
+    const [page, setPage] = useState(1); // 当前页码，默认 1
+    const query = useMemo(() => ({ page, pageSize: 10 }), [page]);
+    const { data } = useScheduledTasksData(query); // 传给 hook
 
+    // 获取 ScheduledTaskData 的 items
+    const items = useMemo(() => data?.items ?? [], [data?.items]);
     const [filterName, setFilterName] = useState('');
 
-    const dataFiltered: UserProps[] = applyFilter({
-        inputData: _users,
+    const dataFiltered: ScheduledTask[] = applyFilter({
+        inputData: items,
         comparator: getComparator(table.order, table.orderBy),
         filterName,
     });
@@ -76,35 +81,36 @@ export function ScheduledTaskView() {
                             <TaskTableHead
                                 order={table.order}
                                 orderBy={table.orderBy}
-                                rowCount={_users.length}
+                                rowCount={items.length}
                                 numSelected={table.selected.length}
                                 onSort={table.onSort}
                                 onSelectAllRows={(checked) =>
                                     table.onSelectAllRows(
                                         checked,
-                                        _users.map((user) => user.id)
+                                        items.map((user) => user.id)
                                     )
                                 }
                                 headLabel={[
                                     { id: 'name', label: 'Name' },
-                                    { id: 'company', label: 'Company' },
-                                    { id: 'role', label: 'Role' },
-                                    { id: 'isVerified', label: 'Verified', align: 'center' },
+                                    { id: 'corn', label: 'Corn' },
+                                    { id: 'cmd', label: 'Cmd' },
+                                    { id: 'args', label: 'Args' },
                                     { id: 'status', label: 'Status' },
+                                    { id: 'isVerified', label: 'Verified', align: 'center' },
                                     { id: '' },
                                 ]}
                             />
                             <TableBody>
                                 {dataFiltered
-                                    .slice(
+                                    /*.slice(
                                         table.page * table.rowsPerPage,
                                         table.page * table.rowsPerPage + table.rowsPerPage
-                                    )
+                                    )*/
                                     .map((row) => (
                                         <TaskTableRow
                                             key={row.id}
                                             row={row}
-                                            selected={table.selected.includes(row.id)}
+                                            selected={table.selected.includes(String(row.id))}
                                             onSelectRow={() => table.onSelectRow(row.id)}
                                         />
                                     ))}
@@ -114,7 +120,7 @@ export function ScheduledTaskView() {
                                     emptyRows={emptyRows(
                                         table.page,
                                         table.rowsPerPage,
-                                        _users.length
+                                        items.length
                                     )}
                                 />
 
@@ -127,7 +133,7 @@ export function ScheduledTaskView() {
                 <TablePagination
                     component="div"
                     page={table.page}
-                    count={_users.length}
+                    count={items.length}
                     rowsPerPage={table.rowsPerPage}
                     onPageChange={table.onChangePage}
                     rowsPerPageOptions={[5, 10, 25]}
@@ -141,9 +147,9 @@ export function ScheduledTaskView() {
 // ----------------------------------------------------------------------
 
 export function useTable() {
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState('name');
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [selected, setSelected] = useState<string[]>([]);
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 

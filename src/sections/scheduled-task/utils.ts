@@ -1,4 +1,4 @@
-import type { UserProps } from './task-table-row';
+import type { ScheduledTask } from 'src/hooks/useScheduledTasks';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ export function getComparator<Key extends keyof any>(
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-    inputData: UserProps[];
+    inputData: ScheduledTask[];
     filterName: string;
     comparator: (a: any, b: any) => number;
 };
