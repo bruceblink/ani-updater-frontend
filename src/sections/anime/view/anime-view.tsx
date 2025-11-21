@@ -40,7 +40,7 @@ const defaultFilters = {
 
 export function AnimeView() {
     const [page, setPage] = useState(1); // 当前页码，默认 1
-    const query = useMemo(() => ({ page, page_size: 23 }), [page]);
+    const query = useMemo(() => ({ page, pageSize: 23 }), [page]);
     const { data, loading, error } = useAniData(query); // 传给 hook
     const [sortBy, setSortBy] = useState('latest');
     const [searchQuery, setSearchQuery] = useState('');
