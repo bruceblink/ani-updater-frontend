@@ -38,7 +38,7 @@ export function TaskTableToolbar({ numSelected, filterName, onFilterName }: User
                     fullWidth
                     value={filterName}
                     onChange={onFilterName}
-                    placeholder="Search user..."
+                    placeholder="Search task..."
                     startAdornment={
                         <InputAdornment position="start">
                             <Iconify
