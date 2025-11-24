@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import TableBody from '@mui/material/TableBody';
+import { CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
@@ -28,13 +29,54 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 
 export function ScheduledTaskView() {
     const table = useTable();
-    const [page, setPage] = useState(1); // 当前页码，默认 1
-    const query = useMemo(() => ({ page, pageSize: 10 }), [page]);
-    const { data } = useScheduledTasksData(query); // 传给 hook
+    const query = useMemo(() => ({ page: table.page + 1, pageSize: table.rowsPerPage }), [table.page, table.rowsPerPage]);
+    const { data, loading, error } = useScheduledTasksData(query); // 传给 hook
 
     // 获取 ScheduledTaskData 的 items
     const items = useMemo(() => data?.items ?? [], [data?.items]);
+    // 添加 totalCount 字段来获取总数据条数
+    const totalCount = data?.totalCount ?? 0;
     const [filterName, setFilterName] = useState('');
+
+    if (loading)
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    if (error)
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                查询出错了: {error}
+            </Box>
+        );
+    if (!data)
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                没有数据
+            </Box>
+        );
 
     const dataFiltered: ScheduledTask[] = applyFilter({
         inputData: items,
@@ -102,10 +144,6 @@ export function ScheduledTaskView() {
                             />
                             <TableBody>
                                 {dataFiltered
-                                    /*.slice(
-                                        table.page * table.rowsPerPage,
-                                        table.page * table.rowsPerPage + table.rowsPerPage
-                                    )*/
                                     .map((row) => (
                                         <TaskTableRow
                                             key={row.id}
@@ -133,7 +171,7 @@ export function ScheduledTaskView() {
                 <TablePagination
                     component="div"
                     page={table.page}
-                    count={items.length}
+                    count={totalCount}
                     rowsPerPage={table.rowsPerPage}
                     onPageChange={table.onChangePage}
                     rowsPerPageOptions={[5, 10, 25]}
@@ -147,7 +185,7 @@ export function ScheduledTaskView() {
 // ----------------------------------------------------------------------
 
 export function useTable() {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [orderBy, setOrderBy] = useState('name');
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [selected, setSelected] = useState<string[]>([]);
@@ -185,7 +223,7 @@ export function useTable() {
         setPage(0);
     }, []);
 
-    const onChangePage = useCallback((event: unknown, newPage: number) => {
+    const onChangePage = useCallback((_: unknown, newPage: number) => {
         setPage(newPage);
     }, []);
 
