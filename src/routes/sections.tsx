@@ -7,11 +7,11 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
+import { ProtectedRoute } from 'src/routes/components/protected-route';
+
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 import OAuthCallbackHandler from 'src/pages/oauth-callback';
-
-import { ProtectedRoute } from 'src/components/routes/ProtectedRoute';
 
 import { ChartsView } from '../sections/charts/view';
 
