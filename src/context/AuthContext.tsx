@@ -4,32 +4,71 @@ import { useState, useEffect, useContext, createContext, type ReactNode } from '
 import api, { setOnAuthInvalid, schedulePreRefresh } from 'src/utils/api';
 
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
+type UserRole = 'admin' | 'user' | 'guest'; // 根据你的后端调整
+
+interface User {
+    id: string;
+    email: string;
+    role: UserRole;
+    permissions?: string[];
+}
 
 interface AuthContextType {
     status: AuthStatus;
+    user: User | null;
     setStatus: (status: AuthStatus) => void;
+    setUser: (user: User | null) => void;
+    hasPermission: (permission: string) => boolean;
+    hasRole: (role: UserRole) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
     status: 'loading',
+    user: null,
     setStatus: () => {},
+    setUser: () => {},
+    hasPermission: () => false,
+    hasRole: () => false,
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [status, setStatus] = useState<AuthStatus>('loading');
+    const [user, setUser] = useState<User | null>(null);
+
+    const hasPermission = (permission: string): boolean => {
+        if (!user || !user.permissions) return false;
+        return user.permissions.includes(permission);
+    };
+
+    const hasRole = (role: UserRole): boolean => {
+        if (!user) return false;
+        return user.role === role;
+    };
 
     useEffect(() => {
         const controller = new AbortController();
 
         // 刷新失败 → 标记未登录（外层路由可据此跳转登录页）
-        setOnAuthInvalid(() => setStatus('unauthenticated'));
+        setOnAuthInvalid(() => {
+            setStatus('unauthenticated');
+            setUser(null);
+            localStorage.removeItem('access_token');
+        });
 
         const checkAuth = async () => {
             try {
                 const res = await api.get('/api/me', { signal: controller.signal });
                 if (res.data?.status === 'ok') {
+                    const userData = res.data.data;
+                    console.log("userData: ", userData);
+                    setUser({
+                        id: userData.id,
+                        email: userData.email,
+                        role: userData.role || 'user', // 默认角色
+                        permissions: userData.permissions || [],
+                    });
                     setStatus('authenticated');
                 }
                 // 如果后端返回 access_token 的过期时间 exp，则安排预刷新
@@ -55,10 +94,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         return () => {
             controller.abort();
-            // 组件卸载时不再接收失效回调（可选）
             setOnAuthInvalid(null);
         };
     }, []);
 
-    return <AuthContext.Provider value={{ status, setStatus }}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{
+            status,
+            user,
+            setStatus,
+            setUser,
+            hasPermission,
+            hasRole,
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
