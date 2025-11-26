@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
+import { CircularProgress } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -12,6 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useRouter } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/config-global';
+import { useAuth } from 'src/context/AuthContext'; // 导入 useAuth
 
 import { Iconify } from 'src/components/iconify';
 
@@ -19,12 +21,40 @@ import { Iconify } from 'src/components/iconify';
 
 export function SignInView() {
     const router = useRouter();
+    const { status } = useAuth(); // 获取认证状态
 
     const [showPassword, setShowPassword] = useState(false);
+
+    // 如果已登录，重定向到首页
+    useEffect(() => {
+        if (status === 'authenticated') {
+            router.replace('/'); // 使用 replace 而不是 push，避免登录页留在历史记录中
+        }
+    }, [status, router]);
 
     const handleSignIn = useCallback(() => {
         router.push('/');
     }, [router]);
+
+    if (status === 'loading') {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    // 如果已登录，不渲染登录表单
+    if (status === 'authenticated') {
+        return null; // 或者可以返回一个加载状态
+    }
 
     const renderForm = (
         <Box
