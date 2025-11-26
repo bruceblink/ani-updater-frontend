@@ -43,6 +43,7 @@ export function AnalyticsNews({ title, subheader, list, sx, ...other }: Props) {
 
             <Box sx={{ p: 2, textAlign: 'right' }}>
                 <Button
+                    href="/news"
                     size="small"
                     color="inherit"
                     endIcon={
