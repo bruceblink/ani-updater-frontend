@@ -4,7 +4,7 @@ import { useState, useEffect, useContext, createContext, type ReactNode } from '
 import api, { setOnAuthInvalid, schedulePreRefresh } from 'src/utils/api';
 
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
-type UserRole = 'admin' | 'user' | 'guest'; // 根据你的后端调整
+export type UserRole = 'admin' | 'user' | 'guest'; // 根据你的后端调整
 
 interface User {
     id: string;
