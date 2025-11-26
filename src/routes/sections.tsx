@@ -26,6 +26,7 @@ export const ChartsPage = lazy(() => import('src/pages/charts'));
 export const NewsPage = lazy(() => import('src/pages/news'));
 export const ScheduledTasksPage = lazy(() => import('src/pages/scheduled-tasks'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const Page403 = lazy(() => import('src/pages/page-not-access'));
 
 const renderFallback = () => (
     <Box
@@ -48,6 +49,7 @@ const renderFallback = () => (
 );
 
 export const routesSection: RouteObject[] = [
+    // 需要登录的路由组
     {
         element: (
             <ProtectedRoute>
@@ -67,6 +69,7 @@ export const routesSection: RouteObject[] = [
             { path: 'scheduledTasks', element: <ScheduledTasksPage /> },
         ],
     },
+    // 无需登录的路由 - 直接渲染，不加任何包装
     {
         path: 'sign-in',
         element: (
@@ -79,9 +82,23 @@ export const routesSection: RouteObject[] = [
         path: 'auth/callback', // ✅ GitHub OAuth 登录回调
         element: <OAuthCallbackHandler />,
     },
+    // 新增其他公开页面示例
+    {
+        path: 'about',
+        element: (
+            <div>
+                <h1>关于我们</h1>
+                <p>这是一个公开页面，任何人都可以访问</p>
+            </div>
+        ),
+    },
     {
         path: '404',
         element: <Page404 />,
+    },
+    {
+        path: '403',
+        element: <Page403 />,
     },
     { path: '*', element: <Page404 /> },
 ];
