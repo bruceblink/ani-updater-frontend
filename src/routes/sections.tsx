@@ -24,6 +24,7 @@ export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ChartsPage = lazy(() => import('src/pages/charts'));
 export const NewsPage = lazy(() => import('src/pages/news'));
+export const NewsAnalytics = lazy(() => import('src/pages/news-analytics'));
 export const ScheduledTasksPage = lazy(() => import('src/pages/scheduled-tasks'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const Page403 = lazy(() => import('src/pages/page-not-access'));
@@ -91,6 +92,11 @@ export const routesSection: RouteObject[] = [
                 <p>这是一个公开页面，任何人都可以访问</p>
             </div>
         ),
+    },
+    // 公开的analyticsNews页面
+    {
+        path: 'analyticsNews',
+        element: <NewsAnalytics />
     },
     {
         path: '404',
