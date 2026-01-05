@@ -44,6 +44,18 @@ export default defineConfig({
       },
     ],
   },
-  server: { port: PORT, host: true },
+    server: {
+        port: PORT, host: true,
+        proxy: {
+            '/api/analysis': {
+                target: 'https://news-analytics-gw35.onrender.com',
+                changeOrigin: true,
+            },
+            '/api': {
+                target: process.env.VITE_API_URL,
+                changeOrigin: true,
+            },
+        },
+    },
   preview: { port: PORT, host: true },
 });

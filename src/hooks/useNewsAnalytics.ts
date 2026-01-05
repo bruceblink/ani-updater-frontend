@@ -52,11 +52,9 @@ export default function useNewsEventData(params: NewsQuery | null): NewsEventDat
         resetState();
         try {
             const res = await api.get<ApiResponse<PageData<NewsEvent>>>('/api/analysis/events', {
-                baseURL: "https://news-analytics-gw35.onrender.com",
                 params,
             });
-            const a = res.data.data;
-            setData(a);
+            setData(res.data.data);
         } catch (e: unknown) {
             const err = e instanceof Error ? e : new Error('未知错误');
             setError(err.message);
