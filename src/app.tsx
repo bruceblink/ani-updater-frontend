@@ -9,7 +9,6 @@ import { usePathname } from 'src/routes/hooks';
 import { CONFIG } from 'src/config-global';
 import { AuthProvider } from 'src/context/AuthContext';
 import { ThemeProvider } from 'src/theme/theme-provider';
-import { LatestUpdatedAnimeProvider } from 'src/context/LatestAnimeContext';
 
 import { Iconify } from 'src/components/iconify';
 import { BackToTop } from 'src/components/scrollbar';
@@ -45,11 +44,9 @@ export default function App({ children }: AppProps) {
     return (
         <AuthProvider>
             <ThemeProvider>
-                <LatestUpdatedAnimeProvider>
-                    {children}
-                    <BackToTop />
-                    {CONFIG.isBrowser == 'true' ? githubButton() : ''}
-                </LatestUpdatedAnimeProvider>
+                {children}
+                <BackToTop />
+                {CONFIG.isBrowser == 'true' ? githubButton() : ''}
             </ThemeProvider>
         </AuthProvider>
     );
