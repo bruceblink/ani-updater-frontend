@@ -152,11 +152,6 @@ export function OverviewAnalyticsView() {
                         }}
                     />
                 </Grid>
-
-                <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-                    <AnalyticsNews title="News" list={_posts.slice(0, 5)} />
-                </Grid>
-
                 <Grid size={{ xs: 12, md: 6, lg: 4 }}>
                     <AnalyticsOrderTimeline title="Order timeline" list={_timeline} />
                 </Grid>
