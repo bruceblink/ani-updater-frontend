@@ -3,6 +3,8 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
+import { CONFIG } from '../config-global';
+
 /** 后端返回的统一响应格式 */
 export interface ApiResponse<T = unknown> {
     status: 'ok' | 'error';
@@ -28,7 +30,7 @@ declare module 'axios' {
 }
 
 const api = axios.create({
-    baseURL: "",
+    baseURL: import.meta.env.DEV ? '' : CONFIG.apiUrl,
     withCredentials: true,
 });
 
