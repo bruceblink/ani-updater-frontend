@@ -1,5 +1,6 @@
 import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
+import type { NewsEvent } from 'src/hooks/useNewsAnalytics';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -19,13 +20,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 type Props = CardProps & {
     title?: string;
     subheader?: string;
-    list: {
-        id: string;
-        title: string;
-        coverUrl: string;
-        description: string;
-        postedAt: string | number | null;
-    }[];
+    list: NewsEvent[];
 };
 
 export function AnalyticsNews({ title, subheader, list, sx, ...other }: Props) {
@@ -82,13 +77,13 @@ function Item({ item, sx, ...other }: ItemProps) {
             <Avatar
                 variant="rounded"
                 alt={item.title}
-                src={item.coverUrl}
+                /*src={item.coverUrl}*/
                 sx={{ width: 48, height: 48, flexShrink: 0 }}
             />
 
             <ListItemText
                 primary={<Link color="inherit">{item.title}</Link>}
-                secondary={item.description}
+                /*secondary={item.description}*/
                 slotProps={{
                     primary: { noWrap: true },
                     secondary: {
@@ -99,7 +94,7 @@ function Item({ item, sx, ...other }: ItemProps) {
             />
 
             <Box sx={{ flexShrink: 0, typography: 'caption', color: 'text.disabled' }}>
-                {fToNow(item.postedAt)}
+                {fToNow(item.event_date)}
             </Box>
         </Box>
     );
