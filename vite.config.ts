@@ -52,7 +52,7 @@ export default defineConfig({
                 changeOrigin: true,
             },
             '/api': {
-                target: process.env.VITE_API_URL,
+                target: 'https://api.likanug.top',
                 changeOrigin: true,
             },
         },
