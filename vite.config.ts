@@ -44,18 +44,6 @@ export default defineConfig({
       },
     ],
   },
-    server: {
-        port: PORT, host: true,
-        proxy: {
-            '/api/analysis': {
-                target: 'https://news-analytics-gw35.onrender.com',
-                changeOrigin: true,
-            },
-            '/api': {
-                target: 'https://api.likanug.top',
-                changeOrigin: true,
-            },
-        },
-    },
+  server: { port: PORT, host: true },
   preview: { port: PORT, host: true },
 });

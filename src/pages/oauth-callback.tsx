@@ -9,16 +9,7 @@ export default function OAuthCallbackHandler() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const token = params.get('token');
-
-        if (token) {
-            // 存储 access_token
-            localStorage.setItem('access_token', token);
-
-            // 去首页，替换历史记录，避免 token 残留在地址栏
-            navigate('/', { replace: true });
-        }
+        navigate('/', { replace: true });
     }, [location, navigate]);
 
     return (

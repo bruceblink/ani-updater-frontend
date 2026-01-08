@@ -30,7 +30,7 @@ declare module 'axios' {
 }
 
 const api = axios.create({
-    baseURL: import.meta.env.DEV ? '' : CONFIG.apiUrl,
+    baseURL: CONFIG.apiUrl,
     withCredentials: true,
 });
 
