@@ -1,16 +1,22 @@
-import type { UserRole } from 'src/context/AuthContext'; // 导入 UserRole 类型
+import type { ReactNode } from 'react';
+import type { UserRole } from 'src/context/AuthContext';
 
-import { useEffect, useCallback, type ReactNode } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { Box, CircularProgress } from '@mui/material';
 
 import { useAuth } from 'src/context/AuthContext';
 
-interface Props {
+interface ProtectedRouteProps {
     children: ReactNode;
+
+    /** 需要的角色（RBAC，第一层） */
     requiredRole?: UserRole;
+
+    /** 需要的权限（可选，第二层） */
     requiredPermission?: string;
+
+    /** 权限不足时跳转路径 */
     fallbackPath?: string;
 }
 
@@ -18,35 +24,12 @@ export function ProtectedRoute({
                                    children,
                                    requiredRole,
                                    requiredPermission,
-                                   fallbackPath = '/unauthorized'
-                               }: Props) {
-
-    const { status, user, hasPermission, hasRole } = useAuth();
+                                   fallbackPath = '/unauthorized',
+                               }: ProtectedRouteProps) {
+    const { status, user, hasRole, hasPermission } = useAuth();
     const location = useLocation();
-    const navigate = useNavigate();
 
-    // 使用 useCallback 包装权限检查函数
-    const checkAuthorization = useCallback(() => {
-        if (!user) return false;
-
-        // 检查角色
-        if (requiredRole && !hasRole(requiredRole)) {
-            return false;
-        }
-
-        // 检查具体权限
-        return !(requiredPermission && !hasPermission(requiredPermission));
-
-
-    }, [user, requiredRole, requiredPermission, hasRole, hasPermission]);
-
-    useEffect(() => {
-        // 如果已认证但权限不足，重定向到未授权页面
-        if (status === 'authenticated' && !checkAuthorization()) {
-            navigate(fallbackPath, { replace: true });
-        }
-    }, [status, checkAuthorization, navigate, fallbackPath]);
-
+    /* ========= 1. 认证状态加载中 ========= */
     if (status === 'loading') {
         return (
             <Box
@@ -62,14 +45,38 @@ export function ProtectedRoute({
         );
     }
 
+    /* ========= 2. 未登录 ========= */
     if (status === 'unauthenticated') {
-        return <Navigate to="/sign-in" state={{ from: location }} replace />;
+        return (
+            <Navigate
+                to="/sign-in"
+                replace
+                state={{ from: location }}
+            />
+        );
     }
 
-    // 权限检查不通过，不渲染内容（会在useEffect中重定向）
-    if (!checkAuthorization()) {
-        return null;
+    /* ========= 3. 理论兜底（不应发生） ========= */
+    if (!user) {
+        return (
+            <Navigate
+                to="/sign-in"
+                replace
+                state={{ from: location }}
+            />
+        );
     }
 
+    /* ========= 4. 角色校验（第一优先级） ========= */
+    if (requiredRole && !hasRole(requiredRole)) {
+        return <Navigate to={fallbackPath} replace />;
+    }
+
+    /* ========= 5. 权限校验（可选增强） ========= */
+    if (requiredPermission && !hasPermission(requiredPermission)) {
+        return <Navigate to={fallbackPath} replace />;
+    }
+
+    /* ========= 6. 放行 ========= */
     return <>{children}</>;
 }
