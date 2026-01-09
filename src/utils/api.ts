@@ -1,11 +1,10 @@
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
-import dayjs from 'dayjs';
 
 import { CONFIG } from '../config-global';
 
-/** 后端返回的统一响应格式 */
+/** 后端统一响应结构 */
 export interface ApiResponse<T = unknown> {
     status: 'ok' | 'error';
     message?: string;
@@ -20,105 +19,72 @@ export interface PageData<T> {
     totalPages: number; // 总页数
 }
 
-// ---- 类型增强：给 axios 的 config 增加一个开关字段 ----
+/** 扩展 axios config */
 declare module 'axios' {
     export interface AxiosRequestConfig {
-        /** 标记该请求不参与 refresh 拦截与全局 loading 统计 */
-        skipAuthRefresh?: boolean;
         _retry?: boolean;
     }
 }
 
 const api = axios.create({
     baseURL: CONFIG.apiUrl,
-    withCredentials: true,
+    withCredentials: true, // ⭐ 核心：cookie 自动携带
 });
 
-let isRefreshing = false;
-let refreshSubscribers: Array<() => void> = [];
-let preRefreshTimer: ReturnType<typeof setTimeout> | null = null;
+/* ================== 刷新控制 ================== */
 
+let isRefreshing = false;
+let subscribers: Array<() => void> = [];
+
+/** 刷新失败时的统一处理（跳登录页） */
 let onAuthInvalid: (() => void) | null = null;
 export function setOnAuthInvalid(handler: (() => void) | null) {
     onAuthInvalid = handler;
 }
 
-// 请求拦截器
-api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('access_token');
-    if (token) config.headers['Authorization'] = `Bearer ${token}`;
-    return config;
-});
+/* ================== 响应拦截 ================== */
 
-// 响应拦截器
 api.interceptors.response.use(
     (res) => res,
     async (error: AxiosError & { config?: InternalAxiosRequestConfig }) => {
-        const originalRequest = error.config;
-        if (!originalRequest) return Promise.reject(error);
+        const original = error.config;
+        if (!original || error.response?.status !== 401) {
+            return Promise.reject(error);
+        }
 
-        // /auth/token/refresh 或 /api/me 失败直接登出
-        if (
-            error.response?.status === 401 &&
-            (originalRequest.url?.includes('/auth/token/refresh') ||
-                originalRequest.url?.includes('/api/me'))
-        ) {
+        // refresh 本身失败 → 强制登出
+        if (original.url?.includes('/auth/token/refresh')) {
             onAuthInvalid?.();
             return Promise.reject(error);
         }
 
-        // 对其他 401 请求触发刷新
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-
-            if (!isRefreshing) {
-                isRefreshing = true;
-                try {
-                    const resp = await api.post('/auth/token/refresh', null, { skipAuthRefresh: true });
-                    const newToken = resp.data.access_token;
-                    localStorage.setItem('access_token', newToken);
-                    isRefreshing = false;
-                    refreshSubscribers.forEach((cb) => cb());
-                    refreshSubscribers = [];
-                } catch (e) {
-                    isRefreshing = false;
-                    refreshSubscribers.forEach((cb) => cb());
-                    refreshSubscribers = [];
-                    onAuthInvalid?.();
-                    return Promise.reject(e);
-                }
-            }
-
-            return new Promise((resolve) => {
-                refreshSubscribers.push(() => {
-                    originalRequest.headers['Authorization'] =
-                        `Bearer ${localStorage.getItem('access_token')}`;
-                    resolve(api(originalRequest));
-                });
-            });
+        // 防止无限重试
+        if (original._retry) {
+            onAuthInvalid?.();
+            return Promise.reject(error);
         }
-        return Promise.reject(error);
+
+        original._retry = true;
+
+        if (!isRefreshing) {
+            isRefreshing = true;
+            try {
+                await api.post('/auth/token/refresh');
+                subscribers.forEach((cb) => cb());
+                subscribers = [];
+            } catch (e) {
+                subscribers = [];
+                onAuthInvalid?.();
+                return Promise.reject(e);
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        return new Promise((resolve) => {
+            subscribers.push(() => resolve(api(original)));
+        });
     }
 );
-
-// 预刷新 token
-export async function schedulePreRefresh(exp: number) {
-    if (preRefreshTimer) clearTimeout(preRefreshTimer);
-
-    const now = dayjs().unix();
-    const delayMs = (exp - now - 60) * 1000;
-    if (delayMs <= 0) return;
-
-    preRefreshTimer = setTimeout(async () => {
-        try {
-            const resp = await api.post('/auth/token/refresh', null, { skipAuthRefresh: true });
-            const nextExp = resp.data?.data?.access_token_exp;
-            if (nextExp) await schedulePreRefresh(nextExp);
-        } catch (e) {
-            console.log('refresh token error:', e);
-            onAuthInvalid?.();
-        }
-    }, delayMs);
-}
 
 export default api;
