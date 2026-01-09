@@ -64,10 +64,10 @@ export const routesSection: RouteObject[] = [
         children: [
             { index: true, element: <DashboardPage /> },
             /*{ path: 'user', element: <UserPage /> },*/
-            { path: 'charts', element: <ChartsView /> },
+            { path: 'charts', element: <ProtectedRoute requiredRole="admin"> <ChartsView /> </ProtectedRoute>},
             { path: 'animes', element: <AnimePage /> },
             { path: 'news', element: <NewsPage /> },
-            { path: 'scheduledTasks', element: <ScheduledTasksPage /> },
+            { path: 'scheduledTasks', element: <ProtectedRoute requiredRole="admin"> <ScheduledTasksPage /> </ProtectedRoute>},
         ],
     },
     // 无需登录的路由 - 直接渲染，不加任何包装
@@ -104,6 +104,10 @@ export const routesSection: RouteObject[] = [
     },
     {
         path: '403',
+        element: <Page403 />,
+    },
+    {
+        path: 'unauthorized',
         element: <Page403 />,
     },
     { path: '*', element: <Page404 /> },
