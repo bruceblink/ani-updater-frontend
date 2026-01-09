@@ -57,10 +57,10 @@ api.interceptors.response.use(
         const originalRequest = error.config;
         if (!originalRequest) return Promise.reject(error);
 
-        // /auth/refresh 或 /api/me 失败直接登出
+        // /auth/token/refresh 或 /api/me 失败直接登出
         if (
             error.response?.status === 401 &&
-            (originalRequest.url?.includes('/auth/refresh') ||
+            (originalRequest.url?.includes('/auth/token/refresh') ||
                 originalRequest.url?.includes('/api/me'))
         ) {
             onAuthInvalid?.();
@@ -74,7 +74,7 @@ api.interceptors.response.use(
             if (!isRefreshing) {
                 isRefreshing = true;
                 try {
-                    const resp = await api.post('/auth/refresh', null, { skipAuthRefresh: true });
+                    const resp = await api.post('/auth/token/refresh', null, { skipAuthRefresh: true });
                     const newToken = resp.data.access_token;
                     localStorage.setItem('access_token', newToken);
                     isRefreshing = false;
@@ -111,7 +111,7 @@ export async function schedulePreRefresh(exp: number) {
 
     preRefreshTimer = setTimeout(async () => {
         try {
-            const resp = await api.post('/auth/refresh', null, { skipAuthRefresh: true });
+            const resp = await api.post('/auth/token/refresh', null, { skipAuthRefresh: true });
             const nextExp = resp.data?.data?.access_token_exp;
             if (nextExp) await schedulePreRefresh(nextExp);
         } catch (e) {
