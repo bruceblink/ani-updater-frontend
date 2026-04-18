@@ -4,10 +4,10 @@ import { lazy, Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { varAlpha } from 'minimal-shared/utils';
 
-import { useAuth } from 'src/context/AuthContext';
-
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+
+import { useAuth } from 'src/context/AuthContext';
 
 import { ProtectedRoute } from 'src/routes/components/protected-route';
 
