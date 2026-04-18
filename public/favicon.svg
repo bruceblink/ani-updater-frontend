@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9C27B0"/>
+      <stop offset="100%" stop-color="#E040FB"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7B1FA2"/>
+      <stop offset="100%" stop-color="#CE93D8"/>
+    </linearGradient>
+  </defs>
+  <!-- 背景圆 -->
+  <circle cx="16" cy="16" r="15" fill="url(#g1)"/>
+  <!-- 五角星 -->
+  <polygon
+    points="16,5 18.94,12.27 26.71,12.27 20.54,16.88 22.94,24.09 16,19.27 9.06,24.09 11.46,16.88 5.29,12.27 13.06,12.27"
+    fill="white"
+    opacity="0.95"
+  />
+  <!-- 小装饰点 -->
+  <circle cx="16" cy="27" r="1.2" fill="white" opacity="0.6"/>
+  <circle cx="11" cy="26" r="0.8" fill="white" opacity="0.4"/>
+  <circle cx="21" cy="26" r="0.8" fill="white" opacity="0.4"/>
+</svg>

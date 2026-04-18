@@ -16,7 +16,6 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { CONFIG } from 'src/config-global';
 
-import { Logo } from 'src/components/logo';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -81,7 +80,25 @@ export function LandingView() {
             }}
         >
             <Toolbar sx={{ px: { xs: 2, md: 4 } }}>
-                <Logo sx={{ mr: 1 }} />
+                <Box
+                    component="svg"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 32 32"
+                    sx={{ width: 32, height: 32, mr: 1, flexShrink: 0 }}
+                >
+                    <defs>
+                        <linearGradient id="ani-logo-g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#9C27B0" />
+                            <stop offset="100%" stopColor="#E040FB" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="16" cy="16" r="15" fill="url(#ani-logo-g1)" />
+                    <polygon
+                        points="16,5 18.94,12.27 26.71,12.27 20.54,16.88 22.94,24.09 16,19.27 9.06,24.09 11.46,16.88 5.29,12.27 13.06,12.27"
+                        fill="white"
+                        opacity="0.95"
+                    />
+                </Box>
                 <Typography
                     variant="h6"
                     sx={{ fontWeight: 700, letterSpacing: '-0.5px', flexGrow: 1 }}
@@ -392,29 +409,65 @@ export function LandingView() {
                     justifyContent="space-between"
                 >
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <Logo isSingle sx={{ width: 28, height: 28 }} />
+                        <Box
+                            component="svg"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 32 32"
+                            sx={{ width: 28, height: 28, flexShrink: 0 }}
+                        >
+                            <defs>
+                                <linearGradient
+                                    id="ani-footer-g1"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="100%"
+                                    y2="100%"
+                                >
+                                    <stop offset="0%" stopColor="#9C27B0" />
+                                    <stop offset="100%" stopColor="#E040FB" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="16" cy="16" r="15" fill="url(#ani-footer-g1)" />
+                            <polygon
+                                points="16,5 18.94,12.27 26.71,12.27 20.54,16.88 22.94,24.09 16,19.27 9.06,24.09 11.46,16.88 5.29,12.27 13.06,12.27"
+                                fill="white"
+                                opacity="0.95"
+                            />
+                        </Box>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                             © {new Date().getFullYear()} AniRadar. All rights reserved.
                         </Typography>
                     </Stack>
-                    <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        divider={<Divider orientation="vertical" flexItem />}
+                    >
                         <Typography
                             component="a"
                             href="https://github.com/bruceblink/Agora"
                             target="_blank"
                             rel="noopener noreferrer"
                             variant="body2"
-                            sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                            sx={{
+                                color: 'text.secondary',
+                                textDecoration: 'none',
+                                '&:hover': { color: 'text.primary' },
+                            }}
                         >
                             后端项目
                         </Typography>
                         <Typography
                             component="a"
-                            href="https://github.com/bruceblink/ani-updater-frontend"
+                            href="https://github.com/bruceblink/AniRadar"
                             target="_blank"
                             rel="noopener noreferrer"
                             variant="body2"
-                            sx={{ color: 'text.secondary', textDecoration: 'none', '&:hover': { color: 'text.primary' } }}
+                            sx={{
+                                color: 'text.secondary',
+                                textDecoration: 'none',
+                                '&:hover': { color: 'text.primary' },
+                            }}
                         >
                             前端项目
                         </Typography>
