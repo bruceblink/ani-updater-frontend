@@ -1,22 +1,23 @@
-import AppBar from '@mui/material/AppBar';
+import type { IconifyName } from 'src/components/iconify';
+
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import { alpha, useTheme } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
+import { alpha, useTheme } from '@mui/material/styles';
 
 import { CONFIG } from 'src/config-global';
 
-import { Iconify } from 'src/components/iconify';
-import type { IconifyName } from 'src/components/iconify';
 import { Logo } from 'src/components/logo';
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
