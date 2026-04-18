@@ -67,7 +67,7 @@ export const routesSection: RouteObject[] = [
         children: [
             { index: true, element: <DashboardPage /> },
             /*{ path: 'user', element: <UserPage /> },*/
-            { path: 'charts', element: <ProtectedRoute requiredRole="admin"> <ChartsView /> </ProtectedRoute>},
+            { path: 'charts', element: <ChartsView /> },
             { path: 'animes', element: <AnimePage /> },
             { path: 'news', element: <NewsPage /> },
             { path: 'news-items', element: <NewsItemsPage /> },

@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 
 import api from 'src/utils/api';
 
+import { useAuth } from 'src/context/AuthContext';
+
 export interface DashboardStats {
     animeTotal: number;
     newsItemsTotal: number;
@@ -26,9 +28,12 @@ const EMPTY: DashboardStats = {
 };
 
 export default function useDashboardStats(): DashboardStats {
+    const { status } = useAuth();
     const [stats, setStats] = useState<DashboardStats>(EMPTY);
 
     useEffect(() => {
+        if (status !== 'authenticated') return;
+
         const fetchAll = async () => {
             setStats({ ...EMPTY, loading: true });
             try {
@@ -63,7 +68,7 @@ export default function useDashboardStats(): DashboardStats {
         };
 
         void fetchAll();
-    }, []);
+    }, [status]);
 
     return stats;
 }
