@@ -4,15 +4,19 @@ import { useState, useEffect, useCallback } from 'react';
 
 import api from 'src/utils/api';
 
-/** News 结构体对应的 TS 接口 */
+/** NewsEvent 结构体对应的 TS 接口（对应 NewsEventDTO） */
 export interface NewsEvent {
     id: number;
-    event_date: string;
-    title: string;
-    summary: string;
-    news_count: string;
-    score: string;
-    status: string;
+    eventDate: string;
+    clusterId: number;
+    title: string | null;
+    summary: string | null;
+    newsCount: number;
+    score: number | null;
+    /** 0=自动生成 / 1=已确认 / 2=已归档 / 3=已合并 */
+    status: number;
+    parentEventId: number | null;
+    createdAt: string;
 }
 
 // Hook 对外暴露的状态
@@ -20,38 +24,36 @@ export type NewsEventData = {
     data: PageData<NewsEvent>;
     loading: boolean;
     error: string | null;
-    errors: Record<string, string>;
     /** 刷新网络并重新加载，返回一个 Promise */
     refresh: () => Promise<void>;
 };
 
-export interface NewsQuery {
-    page?: number; // 可选
-    pageSize?: number; // 可选
-    filter?: NewsFilter; // 可选
+export interface NewsEventQuery {
+    page?: number;
+    pageSize?: number;
+    filter?: NewsEventFilter;
 }
 
-export interface NewsFilter {
-    title?: string;
-    event_date?: string;
+export interface NewsEventFilter {
+    eventDate?: string;
+    /** 0=自动生成 / 1=已确认 / 2=已归档 / 3=已合并 */
+    status?: number;
 }
 
-export default function useNewsEventData(params: NewsQuery | null): NewsEventData {
+export default function useNewsEventData(params: NewsEventQuery | null): NewsEventData {
     const [data, setData] = useState<PageData<NewsEvent>>();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // 重置 loading 和 error 状态
     const resetState = useCallback(() => {
         setLoading(true);
         setError(null);
     }, []);
 
-    // 从网络拉取
     const fetchData = useCallback(async () => {
         resetState();
         try {
-            const res = await api.get<ApiResponse<PageData<NewsEvent>>>('/api/analysis/events', {
+            const res = await api.get<ApiResponse<PageData<NewsEvent>>>('/api/news/events', {
                 params,
             });
             setData(res.data.data);

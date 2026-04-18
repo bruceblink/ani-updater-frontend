@@ -10,8 +10,6 @@ import Avatar from '@mui/material/Avatar';
 import CardHeader from '@mui/material/CardHeader';
 import ListItemText from '@mui/material/ListItemText';
 
-import { fToNow } from 'src/utils/format-time';
-
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
@@ -76,14 +74,14 @@ function Item({ item, sx, ...other }: ItemProps) {
         >
             <Avatar
                 variant="rounded"
-                alt={item.title}
+                alt={item.title ?? undefined}
                 /*src={item.coverUrl}*/
                 sx={{ width: 48, height: 48, flexShrink: 0 }}
             />
 
             <ListItemText
-                primary={<Link color="inherit">{item.title}</Link>}
-                /*secondary={item.description}*/
+                primary={<Link color="inherit">{item.title ?? '暂无标题'}</Link>}
+                secondary={item.summary}
                 slotProps={{
                     primary: { noWrap: true },
                     secondary: {
@@ -94,7 +92,7 @@ function Item({ item, sx, ...other }: ItemProps) {
             />
 
             <Box sx={{ flexShrink: 0, typography: 'caption', color: 'text.disabled' }}>
-                {fToNow(item.event_date)}
+                {item.eventDate}
             </Box>
         </Box>
     );
