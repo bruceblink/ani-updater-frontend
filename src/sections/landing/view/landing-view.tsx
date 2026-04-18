@@ -108,7 +108,7 @@ export function LandingView() {
                 <Button
                     variant="contained"
                     size="small"
-                    startIcon={<Iconify icon="socials:github" width={18} />}
+                    startIcon={<Iconify icon="mdi:github" width={18} />}
                     onClick={handleGithubLogin}
                     sx={{
                         bgcolor: 'text.primary',
@@ -180,10 +180,7 @@ export function LandingView() {
                         }}
                     >
                         番剧追踪 · 资讯聚合
-                        <Box
-                            component="span"
-                            sx={{ display: 'block', color: 'primary.main' }}
-                        >
+                        <Box component="span" sx={{ display: 'block', color: 'primary.main' }}>
                             数据洞察一体化
                         </Box>
                     </Typography>
@@ -198,14 +195,15 @@ export function LandingView() {
                             fontSize: '1.05rem',
                         }}
                     >
-                        AniRadar 是一个番剧与资讯一体化管理平台，帮助您追踪在追番剧、聚合多源新闻热点、以图表分析数据趋势，让信息管理更高效。
+                        AniRadar
+                        是一个番剧与资讯一体化管理平台，帮助您追踪在追番剧、聚合多源新闻热点、以图表分析数据趋势，让信息管理更高效。
                     </Typography>
 
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                         <Button
                             variant="contained"
                             size="large"
-                            startIcon={<Iconify icon="socials:github" width={20} />}
+                            startIcon={<Iconify icon="mdi:github" width={20} />}
                             onClick={handleGithubLogin}
                             sx={{
                                 bgcolor: 'text.primary',
@@ -373,7 +371,7 @@ export function LandingView() {
                     <Button
                         variant="contained"
                         size="large"
-                        startIcon={<Iconify icon="socials:github" width={22} />}
+                        startIcon={<Iconify icon="mdi:github" width={22} />}
                         onClick={handleGithubLogin}
                         sx={{
                             bgcolor: '#fff',
