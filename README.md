@@ -4,7 +4,7 @@
 ![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)
 ![react](https://img.shields.io/badge/react-18-blue.svg)
 
-> AniRadar 是一个基于 React + TypeScript + Vite 构建的前端管理平台，配套后端项目 [ani-updater](https://github.com/bruceblink/ani-updater)，提供番剧追踪、新闻聚合分析与定时任务管理等核心功能，界面基于 Material-UI 组件库开发。
+> AniRadar 是一个基于 React + TypeScript + Vite 构建的前端管理平台，配套后端项目 [Agora](https://github.com/bruceblink/Agora)，提供番剧追踪、新闻聚合分析与定时任务管理等核心功能，界面基于 Material-UI 组件库开发。
 
 ---
 
@@ -68,7 +68,7 @@ yarn dev
 yarn build
 ```
 
-> 后端项目请参考：[ani-updater](https://github.com/bruceblink/ani-updater)
+> 后端项目请参考：[Agora](https://github.com/bruceblink/Agora)
 
 ---
 
