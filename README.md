@@ -51,7 +51,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/bruceblink/ani-updater-frontend.git
+git clone https://github.com/bruceblink/AniRadar.git
 
 # 安装依赖（推荐 Node.js v20.x）
 yarn install
