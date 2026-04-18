@@ -66,7 +66,7 @@ export const routesSection: RouteObject[] = [
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <DashboardPage /> },
+            { path: 'dashboard', element: <DashboardPage /> },
             /*{ path: 'user', element: <UserPage /> },*/
             { path: 'charts', element: <ChartsView /> },
             { path: 'animes', element: <AnimePage /> },
@@ -105,9 +105,9 @@ export const routesSection: RouteObject[] = [
         path: 'analyticsNews',
         element: <NewsAnalytics />
     },
-    // 公开的落地页
+    // 落地页 - 根路由
     {
-        path: 'home',
+        index: true,
         element: (
             <Suspense fallback={renderFallback()}>
                 <LandingPage />
