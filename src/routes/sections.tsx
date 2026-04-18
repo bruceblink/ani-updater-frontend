@@ -29,6 +29,7 @@ export const ScheduledTasksPage = lazy(() => import('src/pages/scheduled-tasks')
 export const AnimeCollectPage = lazy(() => import('src/pages/anime-collect'));
 export const NewsItemsPage = lazy(() => import('src/pages/news-items'));
 export const NewsEventsPage = lazy(() => import('src/pages/news-events'));
+export const LandingPage = lazy(() => import('src/pages/landing'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const Page403 = lazy(() => import('src/pages/page-not-access'));
 
@@ -103,6 +104,15 @@ export const routesSection: RouteObject[] = [
     {
         path: 'analyticsNews',
         element: <NewsAnalytics />
+    },
+    // 公开的落地页
+    {
+        path: 'home',
+        element: (
+            <Suspense fallback={renderFallback()}>
+                <LandingPage />
+            </Suspense>
+        ),
     },
     {
         path: '404',
