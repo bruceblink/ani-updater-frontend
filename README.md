@@ -75,4 +75,3 @@ yarn build
 ## License
 
 Distributed under the [MIT](LICENSE.md) license.
-
