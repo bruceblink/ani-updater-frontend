@@ -4,17 +4,32 @@ import { useState, useEffect, useCallback } from 'react';
 
 import api from 'src/utils/api';
 
-/** ScheduledTask 结构体对应的 TS 接口 */
+/** ScheduledTask 结构体对应的 TS 接口（对应 ScheduledTasksDTO） */
 export interface ScheduledTask {
-    id: string;
+    id: number;
     name: string;
     cron: string;
-    params: any;
+    params: Record<string, unknown>;
     isEnabled: boolean;
     retryTimes: number;
-    lastRun: string;
-    nextRun: string;
+    lastRun: string | null;
+    nextRun: string | null;
     lastStatus: string;
+}
+
+export interface CreateScheduledTaskDto {
+    name: string;
+    cron: string;
+    params: Record<string, unknown>;
+    isEnabled?: boolean;
+    retryTimes?: number;
+}
+
+export interface UpdateScheduledTaskDto {
+    name?: string;
+    cron?: string;
+    params?: Record<string, unknown>;
+    retryTimes?: number;
 }
 
 // Hook 对外暴露的状态
@@ -35,9 +50,26 @@ export interface ScheduledTaskQuery {
 
 export interface ScheduledTaskFilter {
     name?: string;
-    arg?: string;
-    cmd?: string;
+    isEnabled?: boolean;
 }
+
+/** 定时任务 CRUD API */
+export const scheduledTaskApi = {
+    create: (dto: CreateScheduledTaskDto) =>
+        api.post<ApiResponse<ScheduledTask>>('/api/scheduledTasks', dto),
+
+    update: (id: number, dto: UpdateScheduledTaskDto) =>
+        api.put<ApiResponse<ScheduledTask>>(`/api/scheduledTasks/${id}`, dto),
+
+    toggleStatus: (id: number, isEnabled: boolean) =>
+        api.patch<ApiResponse<ScheduledTask>>(`/api/scheduledTasks/${id}/status`, { isEnabled }),
+
+    delete: (id: number) =>
+        api.delete<ApiResponse<null>>(`/api/scheduledTasks/${id}`),
+
+    reloadScheduler: () =>
+        api.post<ApiResponse<unknown>>('/admin/task/reload'),
+};
 
 export default function useScheduledTasksData(params: ScheduledTaskQuery | null): ScheduledTaskData {
     const [data, setData] = useState<PageData<ScheduledTask>>();

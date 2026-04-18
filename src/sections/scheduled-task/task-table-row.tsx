@@ -11,19 +11,23 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
+import { fDateTime } from 'src/utils/format-time';
+
+import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-
-
-type UserTableRowProps = {
+type TaskTableRowProps = {
     row: ScheduledTask;
     selected: boolean;
     onSelectRow: () => void;
+    onEdit: (row: ScheduledTask) => void;
+    onDelete: (id: number) => void;
+    onToggleStatus: (id: number, isEnabled: boolean) => void;
 };
 
-export function TaskTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
+export function TaskTableRow({ row, selected, onSelectRow, onEdit, onDelete, onToggleStatus }: TaskTableRowProps) {
     const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
     const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,6 +38,11 @@ export function TaskTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         setOpenPopover(null);
     }, []);
 
+    const lastStatusColor =
+        row.lastStatus === 'success' ? 'success' :
+        row.lastStatus === 'running' ? 'info' :
+        row.lastStatus === 'failed' ? 'error' : 'default';
+
     return (
         <>
             <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -42,30 +51,41 @@ export function TaskTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
                 </TableCell>
 
                 <TableCell component="th" scope="row">
-                    <Box
-                        sx={{
-                            gap: 2,
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
+                    <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
                         {row.name}
                     </Box>
                 </TableCell>
-                <TableCell>{row.cron}</TableCell>
-                <TableCell>{row.params.cmd}</TableCell>
-                <TableCell>{row.params.arg}</TableCell>
-                <TableCell align="center">
-                    {row.isEnabled ? (
-                        <Iconify
-                            width={22}
-                            icon="solar:check-circle-bold"
-                            sx={{ color: 'success.main' }}
-                        />
-                    ) : (
-                        '-'
-                    )}
+
+                <TableCell>
+                    <Box component="code" sx={{ fontSize: '0.8rem', bgcolor: 'action.hover', px: 0.75, py: 0.25, borderRadius: 0.5 }}>
+                        {row.cron}
+                    </Box>
                 </TableCell>
+
+                <TableCell align="center">
+                    <Label color={row.isEnabled ? 'success' : 'default'}>
+                        {row.isEnabled ? '启用' : '禁用'}
+                    </Label>
+                </TableCell>
+
+                <TableCell align="center">{row.retryTimes}</TableCell>
+
+                <TableCell>
+                    {row.lastRun ? fDateTime(row.lastRun) : '-'}
+                </TableCell>
+
+                <TableCell>
+                    {row.nextRun ? fDateTime(row.nextRun) : '-'}
+                </TableCell>
+
+                <TableCell>
+                    {row.lastStatus ? (
+                        <Label color={lastStatusColor as 'success' | 'info' | 'error' | 'default'}>
+                            {row.lastStatus}
+                        </Label>
+                    ) : '-'}
+                </TableCell>
+
                 <TableCell align="right">
                     <IconButton onClick={handleOpenPopover}>
                         <Iconify icon="eva:more-vertical-fill" />
@@ -85,7 +105,7 @@ export function TaskTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
                     sx={{
                         p: 0.5,
                         gap: 0.5,
-                        width: 140,
+                        width: 160,
                         display: 'flex',
                         flexDirection: 'column',
                         [`& .${menuItemClasses.root}`]: {
@@ -96,14 +116,19 @@ export function TaskTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
                         },
                     }}
                 >
-                    <MenuItem onClick={handleClosePopover}>
+                    <MenuItem onClick={() => { handleClosePopover(); onEdit(row); }}>
                         <Iconify icon="solar:pen-bold" />
-                        Edit
+                        编辑
                     </MenuItem>
 
-                    <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+                    <MenuItem onClick={() => { handleClosePopover(); onToggleStatus(row.id, !row.isEnabled); }}>
+                        <Iconify icon={row.isEnabled ? 'solar:pause-bold' : 'solar:play-bold'} />
+                        {row.isEnabled ? '禁用' : '启用'}
+                    </MenuItem>
+
+                    <MenuItem onClick={() => { handleClosePopover(); onDelete(row.id); }} sx={{ color: 'error.main' }}>
                         <Iconify icon="solar:trash-bin-trash-bold" />
-                        Delete
+                        删除
                     </MenuItem>
                 </MenuList>
             </Popover>
