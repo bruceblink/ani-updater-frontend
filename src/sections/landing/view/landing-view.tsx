@@ -1,22 +1,34 @@
 import type { IconifyName } from 'src/components/iconify';
 
+import { useState, useEffect } from 'react';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Toolbar from '@mui/material/Toolbar';
+import Skeleton from '@mui/material/Skeleton';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import { alpha, useTheme } from '@mui/material/styles';
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 import { CONFIG } from 'src/config-global';
 
 import { Iconify } from 'src/components/iconify';
+import { useNewsSse } from 'src/hooks/useNewsSse';
 
 // ----------------------------------------------------------------------
 
@@ -65,8 +77,37 @@ function handleGithubLogin() {
 
 // ----------------------------------------------------------------------
 
+// 来源 → 主色 映射
+const SOURCE_COLOR: Record<string, string> = {
+    NGA: '#1877F2',
+    Bilibili: '#00A1D6',
+    AcFun: '#F5413F',
+};
+
+function sourceColor(from: string): string {
+    return SOURCE_COLOR[from] ?? '#7635dc';
+}
+
+// ----------------------------------------------------------------------
+
 export function LandingView() {
     const theme = useTheme();
+
+    // SSE 新闻流（无需登录，公开推送）
+    const { items: timelineItems, status: sseStatus, error: sseError } = useNewsSse(20);
+    const newsLoading = sseStatus === 'connecting';
+
+    // 最新推送条目自动高亮轮播
+    const [activeIdx, setActiveIdx] = useState(0);
+    useEffect(() => {
+        if (!timelineItems.length) return undefined;
+        // 每次新条目推入时，将高亮重置到顶部（最新）
+        setActiveIdx(0);
+        const timer = setInterval(() => {
+            setActiveIdx((prev) => (prev + 1) % timelineItems.length);
+        }, 3000);
+        return () => clearInterval(timer);
+    }, [timelineItems.length]);
 
     const renderHeader = (
         <AppBar
@@ -242,6 +283,230 @@ export function LandingView() {
         </Box>
     );
 
+    const renderNewsTimeline = (
+        <Box
+            id="news-timeline"
+            sx={{
+                py: { xs: 8, md: 12 },
+                bgcolor: 'background.default',
+                position: 'relative',
+                overflow: 'hidden',
+                '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: -60,
+                    right: -60,
+                    width: 320,
+                    height: 320,
+                    borderRadius: '50%',
+                    background: `radial-gradient(circle, ${alpha('#7635dc', 0.08)} 0%, transparent 70%)`,
+                    pointerEvents: 'none',
+                },
+            }}
+        >
+            <Container maxWidth="md">
+                <Stack spacing={2} alignItems="center" sx={{ mb: { xs: 6, md: 8 } }}>
+                    <Typography
+                        variant="overline"
+                        sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2 }}
+                    >
+                        实时新闻
+                    </Typography>
+                    <Typography
+                        variant="h3"
+                        sx={{ fontWeight: 800, textAlign: 'center', letterSpacing: '-0.5px' }}
+                    >
+                        热点资讯，实时推送
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        sx={{ color: 'text.secondary', textAlign: 'center', maxWidth: 480 }}
+                    >
+                        聚合多源互联网热门资讯，随时掌握最新动态
+                    </Typography>
+                    {/* SSE 连接状态指示器 */}
+                    <Stack direction="row" spacing={1} alignItems="center">
+                        <Box
+                            sx={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: '50%',
+                                bgcolor:
+                                    sseStatus === 'connected'
+                                        ? '#22c55e'
+                                        : sseStatus === 'reconnecting'
+                                          ? '#f59e0b'
+                                          : 'text.disabled',
+                                boxShadow:
+                                    sseStatus === 'connected'
+                                        ? `0 0 0 3px ${alpha('#22c55e', 0.25)}`
+                                        : 'none',
+                                animation: sseStatus === 'connected' ? 'pulse 2s infinite' : 'none',
+                                '@keyframes pulse': {
+                                    '0%, 100%': { opacity: 1 },
+                                    '50%': { opacity: 0.4 },
+                                },
+                            }}
+                        />
+                        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                            {sseStatus === 'connected' &&
+                                `实时推送中 · 已收 ${timelineItems.length} 条`}
+                            {sseStatus === 'connecting' && '正在连接实时流…'}
+                            {sseStatus === 'reconnecting' && (sseError ?? '重新连接中…')}
+                            {sseStatus === 'closed' && '推送已停止'}
+                        </Typography>
+                    </Stack>
+                </Stack>
+
+                {newsLoading ? (
+                    <Stack spacing={2}>
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <Stack key={i} direction="row" spacing={2} alignItems="center">
+                                <Skeleton variant="circular" width={12} height={12} />
+                                <Skeleton variant="rounded" width="100%" height={40} />
+                            </Stack>
+                        ))}
+                    </Stack>
+                ) : (
+                    <Timeline
+                        sx={{
+                            p: 0,
+                            [`& .MuiTimelineItem-root:before`]: { flex: 0, p: 0 },
+                        }}
+                    >
+                        {timelineItems.map((item, idx) => {
+                            const isActive = idx === activeIdx;
+                            const color = sourceColor(item.newsFrom);
+                            return (
+                                <TimelineItem key={item.id}>
+                                    <TimelineOppositeContent
+                                        sx={{
+                                            flex: '0 0 90px',
+                                            pr: 2,
+                                            pt: 1.2,
+                                            display: { xs: 'none', sm: 'block' },
+                                        }}
+                                    >
+                                        <Chip
+                                            label={item.category}
+                                            size="small"
+                                            sx={{
+                                                bgcolor: alpha(color, 0.1),
+                                                color,
+                                                fontWeight: 600,
+                                                fontSize: '0.65rem',
+                                                height: 20,
+                                            }}
+                                        />
+                                    </TimelineOppositeContent>
+
+                                    <TimelineSeparator>
+                                        <TimelineDot
+                                            sx={{
+                                                bgcolor: isActive ? color : alpha(color, 0.3),
+                                                width: isActive ? 14 : 10,
+                                                height: isActive ? 14 : 10,
+                                                boxShadow: isActive
+                                                    ? `0 0 0 4px ${alpha(color, 0.18)}`
+                                                    : 'none',
+                                                transition: 'all 0.4s ease',
+                                                m: '6px 0',
+                                            }}
+                                        />
+                                        {idx < timelineItems.length - 1 && (
+                                            <TimelineConnector
+                                                sx={{
+                                                    bgcolor: alpha(color, 0.15),
+                                                    width: 2,
+                                                }}
+                                            />
+                                        )}
+                                    </TimelineSeparator>
+
+                                    <TimelineContent sx={{ py: 0.5, px: 2, pb: 2 }}>
+                                        <Box
+                                            sx={{
+                                                p: 1.5,
+                                                borderRadius: 1.5,
+                                                bgcolor: isActive
+                                                    ? alpha(color, 0.06)
+                                                    : 'transparent',
+                                                border: `1px solid ${isActive ? alpha(color, 0.2) : 'transparent'}`,
+                                                transition: 'all 0.4s ease',
+                                            }}
+                                        >
+                                            <Link
+                                                href={item.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                underline="hover"
+                                                sx={{
+                                                    color: isActive ? color : 'text.primary',
+                                                    fontWeight: isActive ? 700 : 400,
+                                                    fontSize: '0.9rem',
+                                                    lineHeight: 1.5,
+                                                    transition: 'color 0.3s',
+                                                    display: 'block',
+                                                }}
+                                            >
+                                                {item.title}
+                                            </Link>
+                                            <Stack
+                                                direction="row"
+                                                spacing={1}
+                                                alignItems="center"
+                                                sx={{ mt: 0.5 }}
+                                            >
+                                                <Iconify
+                                                    icon="solar:clock-circle-outline"
+                                                    width={12}
+                                                    sx={{ color: 'text.disabled' }}
+                                                />
+                                                <Typography
+                                                    variant="caption"
+                                                    sx={{ color: 'text.disabled' }}
+                                                >
+                                                    {item.newsFrom} · {item.newsDate}
+                                                </Typography>
+                                            </Stack>
+                                        </Box>
+                                    </TimelineContent>
+                                </TimelineItem>
+                            );
+                        })}
+                    </Timeline>
+                )}
+
+                {!newsLoading && timelineItems.length === 0 && (
+                    <Stack alignItems="center" spacing={1} sx={{ py: 6 }}>
+                        <Iconify
+                            icon="solar:shield-warning-outline"
+                            width={40}
+                            sx={{ color: 'text.disabled' }}
+                        />
+                        <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                            {sseStatus === 'reconnecting'
+                                ? (sseError ?? '正在重新连接…')
+                                : '等待服务端推送新闻…'}
+                        </Typography>
+                    </Stack>
+                )}
+
+                <Stack alignItems="center" sx={{ mt: 5 }}>
+                    <Button
+                        variant="outlined"
+                        size="medium"
+                        startIcon={<Iconify icon="solar:arrow-right-bold" width={18} />}
+                        onClick={handleGithubLogin}
+                        sx={{ px: 4 }}
+                    >
+                        登录查看全部资讯
+                    </Button>
+                </Stack>
+            </Container>
+        </Box>
+    );
+
     const renderFeatures = (
         <Box
             id="features"
@@ -306,10 +571,7 @@ export function LandingView() {
                                             sx={{ color: feature.color }}
                                         />
                                     </Box>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{ fontWeight: 700, mb: 1.5 }}
-                                    >
+                                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>
                                         {feature.title}
                                     </Typography>
                                     <Typography
@@ -480,6 +742,7 @@ export function LandingView() {
             {renderHeader}
             <Box component="main" sx={{ flexGrow: 1 }}>
                 {renderHero}
+                {renderNewsTimeline}
                 {renderFeatures}
                 {renderCTA}
             </Box>
