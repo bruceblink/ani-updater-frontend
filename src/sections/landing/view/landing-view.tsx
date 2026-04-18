@@ -1,4 +1,3 @@
-import { alpha, useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,17 +8,19 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import { alpha, useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
 
-import { Logo } from 'src/components/logo';
 import { Iconify } from 'src/components/iconify';
+import type { IconifyName } from 'src/components/iconify';
+import { Logo } from 'src/components/logo';
 
 // ----------------------------------------------------------------------
 
-const FEATURES = [
+const FEATURES: { icon: IconifyName; title: string; description: string; color: string; bg: string }[] = [
     {
         icon: 'solar:play-bold',
         title: '番剧追踪',
