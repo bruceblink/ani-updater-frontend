@@ -13,22 +13,22 @@ export type NavItem = {
 
 export const navData =  [
     {
-        title: 'Dashboard',
+        title: '数据总览',
         path: '/',
         icon: icon('ic-analytics'),
     },
     {
-        title: 'Anime',
+        title: '番剧列表',
         path: '/animes',
         icon: icon('ic-blog'),
     },
     {
-        title: 'Charts',
+        title: '图表分析',
         path: '/charts',
         icon: icon('ic-blog'),
     },
     {
-        title: 'ScheduledTasks',
+        title: '定时任务',
         path: '/scheduledTasks',
         icon: icon('ic-blog'),
         info: null,
