@@ -33,4 +33,19 @@ export const navData =  [
         icon: icon('ic-blog'),
         info: null,
     },
+    {
+        title: '番剧收藏',
+        path: '/anime-collect',
+        icon: icon('ic-blog'),
+    },
+    {
+        title: '新闻条目',
+        path: '/news-items',
+        icon: icon('ic-blog'),
+    },
+    {
+        title: '热点事件',
+        path: '/news-events',
+        icon: icon('ic-blog'),
+    },
 ];

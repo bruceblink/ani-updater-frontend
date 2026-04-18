@@ -26,6 +26,9 @@ export const ChartsPage = lazy(() => import('src/pages/charts'));
 export const NewsPage = lazy(() => import('src/pages/news'));
 export const NewsAnalytics = lazy(() => import('src/pages/news-analytics'));
 export const ScheduledTasksPage = lazy(() => import('src/pages/scheduled-tasks'));
+export const AnimeCollectPage = lazy(() => import('src/pages/anime-collect'));
+export const NewsItemsPage = lazy(() => import('src/pages/news-items'));
+export const NewsEventsPage = lazy(() => import('src/pages/news-events'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const Page403 = lazy(() => import('src/pages/page-not-access'));
 
@@ -67,6 +70,9 @@ export const routesSection: RouteObject[] = [
             { path: 'charts', element: <ProtectedRoute requiredRole="admin"> <ChartsView /> </ProtectedRoute>},
             { path: 'animes', element: <AnimePage /> },
             { path: 'news', element: <NewsPage /> },
+            { path: 'news-items', element: <NewsItemsPage /> },
+            { path: 'news-events', element: <NewsEventsPage /> },
+            { path: 'anime-collect', element: <AnimeCollectPage /> },
             { path: 'scheduledTasks', element: <ProtectedRoute requiredRole="admin"> <ScheduledTasksPage /> </ProtectedRoute>},
         ],
     },
