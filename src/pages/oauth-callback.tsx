@@ -9,7 +9,7 @@ export default function OAuthCallbackHandler() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate('/', { replace: true });
+        navigate('/dashboard', { replace: true });
     }, [location, navigate]);
 
     return (

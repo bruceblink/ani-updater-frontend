@@ -28,7 +28,7 @@ export function SignInView() {
     // 如果已登录，重定向到首页
     useEffect(() => {
         if (status === 'authenticated') {
-            router.replace('/'); // 使用 replace 而不是 push，避免登录页留在历史记录中
+            router.replace('/dashboard'); // 使用 replace 而不是 push，避免登录页留在历史记录中
         }
     }, [status, router]);
 
