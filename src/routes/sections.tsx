@@ -1,8 +1,10 @@
 import type { RouteObject } from 'react-router';
 
 import { lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { varAlpha } from 'minimal-shared/utils';
+
+import { useAuth } from 'src/context/AuthContext';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -53,6 +55,17 @@ const renderFallback = () => (
     </Box>
 );
 
+function RootRedirect() {
+    const { status } = useAuth();
+    if (status === 'loading') return renderFallback();
+    if (status === 'authenticated') return <Navigate to="/dashboard" replace />;
+    return (
+        <Suspense fallback={renderFallback()}>
+            <LandingPage />
+        </Suspense>
+    );
+}
+
 export const routesSection: RouteObject[] = [
     // 需要登录的路由组
     {
@@ -74,7 +87,15 @@ export const routesSection: RouteObject[] = [
             { path: 'news-items', element: <NewsItemsPage /> },
             { path: 'news-events', element: <NewsEventsPage /> },
             { path: 'anime-collect', element: <AnimeCollectPage /> },
-            { path: 'scheduledTasks', element: <ProtectedRoute requiredRole="admin"> <ScheduledTasksPage /> </ProtectedRoute>},
+            {
+                path: 'scheduledTasks',
+                element: (
+                    <ProtectedRoute requiredRole="admin">
+                        {' '}
+                        <ScheduledTasksPage />{' '}
+                    </ProtectedRoute>
+                ),
+            },
         ],
     },
     // 无需登录的路由 - 直接渲染，不加任何包装
@@ -103,16 +124,12 @@ export const routesSection: RouteObject[] = [
     // 公开的analyticsNews页面
     {
         path: 'analyticsNews',
-        element: <NewsAnalytics />
+        element: <NewsAnalytics />,
     },
-    // 落地页 - 根路由
+    // 根路由 - 已登录跳 /dashboard，未登录显示落地页
     {
         index: true,
-        element: (
-            <Suspense fallback={renderFallback()}>
-                <LandingPage />
-            </Suspense>
-        ),
+        element: <RootRedirect />,
     },
     {
         path: '404',
